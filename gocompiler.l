@@ -17,12 +17,12 @@ octal           0[0-7]+
 hexadecimal     0[xX][0-9A-Fa-f]*
 float           {digit}[.,]{digit}
 
-argument        ({letter}|"_")({letter}*|{digit}*|"_"*)*
+argument        ({letter}|"_")({letter}|{digit}|"_")*
 reserved        break|case|chan|const|continue|default|defer|fallthrough|go|goto|import|interface|map|range|select|struct|switch|type|"++"|"--"
-newline         \r\n|\n
+newline         \r\n|\n|\r
 intliteral      {digit}|{inti}
 exponent        ([eE]([+-]?){digit}+)
-real            ({digit}*"."({digit}+)?{exponent}?|({digit}+{exponent})|("."{digit}+{exponent}?))
+real            ({digit}+"."({digit}+)?{exponent}?)|({digit}+{exponent})|("."{digit}+{exponent}?)
 octalERROR      0[0-9]+
 
 escape          \\f|\\n|\\r|\\t|\\\\|\\\"
@@ -82,34 +82,34 @@ escapeERROR     [^\n\r\"\\]
 {real}		        {if (lflag) fprintf(yyout, "REALLIT(%s)\n", yytext); column += yyleng; semi = 1;}
 {intliteral}        {if (lflag) fprintf(yyout, "INTLIT(%s)\n", yytext); column += yyleng; semi = 1;}
 
-{reserved}          {if (lflag) fprintf(yyout, "RESERVED(%s)\n", yytext); column += yyleng; semi = 1;}
-{newline}           {if (lflag && semi && !error) fprintf(yyout, "SEMICOLON\n"); line += 2; column = 1; semi = 0;}
+{reserved}          {if (lflag) fprintf(yyout, "RESERVED(%s)\n", yytext); column += yyleng; semi = 0;}
+{newline}           {if (lflag && semi) fprintf(yyout, "SEMICOLON\n"); line += 2; column = 1; semi = 0;}
 {argument}          {if (lflag) fprintf(yyout, "ID(%s)\n", yytext); column += yyleng; semi = 1;}
-.                   {if (lflag) fprintf(yyout, "Line %d, column %d: illegal character (%s)\n", yylineno, column, yytext); column += yyleng;}
+.                   {if (lflag) fprintf(yyout, "Line %d, column %d: illegal character (%s)\n", yylineno, column, yytext);semi=0; column += yyleng;}
 
 
 
 <STRLITERAL>{newline}                            {if (lflag) fprintf(yyout, "Line %d, column %d: unterminated string literal\n", yylineno-1, temp); semi=0; column=1; error=1; BEGIN 0;} 
-<STRLITERAL>\\                                   {if (lflag) fprintf(yyout, "Line %d, column %d: invalid escape sequence(\\)\n", yylineno, column); error = 1;}
+<STRLITERAL>\\                                   {if (lflag) fprintf(yyout, "Line %d, column %d: invalid escape sequence (\\)\n", yylineno, column); semi=0; column+=yyleng; error = 1;}
 <STRLITERAL>{escape}                             {column += yyleng;}
-<STRLITERAL>\\{escapeERROR}                      {if (lflag) fprintf(yyout, "Line %d, column %d: invalid escape sequence(%s)\n", yylineno, column, yytext); column += yyleng; error=1;}
-<STRLITERAL>({escape}|{escapeERROR})*\"          {if (lflag && !error) fprintf(yyout, "STRLIT(\"%s)\n",yytext); column += yyleng; semi = 1; BEGIN 0;}
-<STRLITERAL><<EOF>>                              {if (lflag) fprintf(yyout, "Line %d, column %d: unterminated string literal\n", yylineno, temp); exit(0);}
+<STRLITERAL>\\{escapeERROR}                      {if (lflag) fprintf(yyout, "Line %d, column %d: invalid escape sequence (%s)\n", yylineno, column, yytext); semi=0; column += yyleng; error=1;}
+<STRLITERAL>({escape}|{escapeERROR})*\"          {if (lflag && error==0) {fprintf(yyout, "STRLIT(\"%s)\n",yytext);  semi = 1;}column += yyleng; BEGIN 0;}
+<STRLITERAL><<EOF>>                              {if (lflag) fprintf(yyout, "Line %d, column %d: unterminated string literal\n", yylineno, temp);semi=0;column+=yyleng; exit(0);}
 <STRLITERAL>.                                    {column += yyleng;}
  
 
-<COMMENT>"*/"      {column += yyleng; temp = 1; BEGIN 0;}
-<COMMENT>{newline} {column = 1;}
-<COMMENT><<EOF>>   {if (lflag && semi) fprintf(yyout, "SEMICOLON\n"); fprintf(yyout, "Line %d, column %d: unterminated comment\n", line, temp); exit(0);}
-<COMMENT>.         {column += yyleng;}
+<COMMENT>"*/"      {column = temp + 2; temp = 1; BEGIN 0;}
+<COMMENT>{newline} {temp = 1;}
+<COMMENT><<EOF>>   {if (lflag && semi) fprintf(yyout, "SEMICOLON\n"); fprintf(yyout, "Line %d, column %d: unterminated comment\n", line, column); exit(0);}
+<COMMENT>.         {temp++;}
  
 
-"//"                   {semi = 0; BEGIN LINECOMMENT;}
-<LINECOMMENT>{newline} {column = 1; line++; if (lflag && semi) fprintf(yyout, "SEMICOLON\n");  BEGIN 0;}
+"//"                   {BEGIN LINECOMMENT;}
+<LINECOMMENT>{newline} {column = 1; line++; if (lflag && semi) fprintf(yyout, "SEMICOLON\n");semi=0;  BEGIN 0;}
 <LINECOMMENT>.         {column += yyleng;}
 
 
-<<EOF>>                 {if (lflag && semi && !error) fprintf(yyout, "SEMICOLON\n"); exit(0);}
+<<EOF>>                 {if (lflag && semi) fprintf(yyout, "SEMICOLON\n"); exit(0);}
 
 
 %%
