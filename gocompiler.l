@@ -32,10 +32,10 @@ escapeERROR     [^\n\r\"\\]
 %option yylineno
 %x COMMENT LINECOMMENT STRLITERAL
 %%
-\"                  {temp = column ; column += yyleng; error = 0; BEGIN STRLITERAL;}
+\"                  {temp = column ; column += yyleng; error = 0;BEGIN STRLITERAL;}
 "/*"                {temp = column + 2; line = yylineno; BEGIN COMMENT;}
 
-";"                 {if (lflag && !error) fprintf(yyout, "SEMICOLON\n");column += yyleng; semi = 0;}
+";"                 {if (lflag) fprintf(yyout, "SEMICOLON\n");column += yyleng; semi = 0;}
 ","                 {if (lflag) fprintf(yyout, "COMMA\n");column += yyleng; semi = 0;}
 "_"                 {if (lflag) fprintf(yyout, "BLANKID\n");column += yyleng; semi = 0;}
 "="                 {if (lflag) fprintf(yyout, "ASSIGN\n");column += yyleng; semi = 0;}
