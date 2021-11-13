@@ -14,7 +14,7 @@ letter          [A-Za-z]
 digit           [0-9]+
 inti            [1-9]{digit}*
 octal           0[0-7]+
-hexadecimal     0[xX][0-9A-Fa-f]*
+hexadecimal     0[xX][0-9A-Fa-f]+
 float           {digit}[.,]{digit}
 
 argument        ({letter}|"_")({letter}|{digit}|"_")*
