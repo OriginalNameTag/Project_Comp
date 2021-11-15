@@ -2,6 +2,8 @@
 //Guilherme Sousa de Oliveira e Cruz Junqueira 2019221958
 //Carlos Eduardo da Costa Jordão 2019221373
 #include <string.h>
+#include "y.tab.h"
+
 int lflag = 0; 
 int column =  1;
 int line = 1;
@@ -15,7 +17,7 @@ digit           [0-9]+
 inti            [1-9]{digit}*
 octal           0[0-7]+
 hexadecimal     0[xX][0-9A-Fa-f]+
-float           {digit}[.,]{digit}
+
 
 argument        ({letter}|"_")({letter}|{digit}|"_")*
 reserved        break|case|chan|const|continue|default|defer|fallthrough|go|goto|import|interface|map|range|select|struct|switch|type|"++"|"--"
@@ -119,7 +121,9 @@ int main (int argc, char**argv){
             lflag = 1;
         }
     }
-    yylex();
+    if(lflag){yylex();}
+    else {yyparse();}
+
     return 0;
 }
 
