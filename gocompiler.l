@@ -1,15 +1,17 @@
 %{
-//Guilherme Sousa de Oliveira e Cruz Junqueira 2019221958
-//Carlos Eduardo da Costa Jordão 2019221373
-#include <string.h>
-#include "y.tab.h"
+    //Carlos Eduardo da Costa Jordão 2019221373
+    //Guilherme Sousa de Oliveira e Cruz Junqueira 2019221958
 
-int lflag = 0; 
-int column =  1;
-int line = 1;
-int semi=0;
-int temp=0;
-int error=0;
+    #include <string.h>
+    #include "y.tab.h"
+
+    int lflag = 0; 
+    int tflag = 0;
+    int column =  1;
+    int line = 1;
+    int semi=0;
+    int temp=0;
+    int error=0;
 
 %}
 letter          [A-Za-z]
@@ -120,13 +122,18 @@ int main (int argc, char**argv){
         if(strcmp(argv[i], "-l") == 0){
             lflag = 1;
         }
+        else if(strcmp(argv[i], "-t") == 0){
+            tflag = 1;
+        }   
     }
     if(lflag){yylex();}
-    else {yyparse();}
+    else if (tflag){yyparse();}
 
     return 0;
 }
-
+void yyerror(char* s){
+    printf("Line %d column %d %s %s\n", yylineno, column, s, yytext);
+}
 int yywrap() {
     return 1;
 }
