@@ -49,9 +49,9 @@ extern int yydebug;
 # define YYTOKENTYPE
   enum yytokentype
   {
-    SEMICOLON = 258,
+    PACKAGE = 258,
     ID = 259,
-    PACKAGE = 260,
+    SEMICOLON = 260,
     VAR = 261,
     LPAR = 262,
     RPAR = 263,
@@ -60,43 +60,43 @@ extern int yydebug;
     BOOL = 266,
     STRING = 267,
     FUNC = 268,
-    LBRACE = 269,
-    RBRACE = 270,
-    ASSIGN = 271,
-    IF = 272,
-    ELSE = 273,
-    FOR = 274,
-    RETURN = 275,
-    PRINT = 276,
-    COMMA = 277,
-    BLANKID = 278,
-    PARSEINT = 279,
-    CMDARGS = 280,
-    LSQ = 281,
-    RSQ = 282,
-    OR = 283,
-    AND = 284,
-    LT = 285,
-    GT = 286,
-    EQ = 287,
-    NE = 288,
-    LE = 289,
-    GE = 290,
-    PLUS = 291,
-    MINUS = 292,
-    STAR = 293,
-    DIV = 294,
-    MOD = 295,
-    NOT = 296,
-    INTLIT = 297,
-    REALLIT = 298,
-    STRLIT = 299
+    COMMA = 269,
+    LBRACE = 270,
+    RBRACE = 271,
+    ASSIGN = 272,
+    IF = 273,
+    ELSE = 274,
+    FOR = 275,
+    RETURN = 276,
+    PRINT = 277,
+    STRLIT = 278,
+    BLANKID = 279,
+    PARSEINT = 280,
+    CMDARGS = 281,
+    LSQ = 282,
+    RSQ = 283,
+    OR = 284,
+    AND = 285,
+    LT = 286,
+    GT = 287,
+    EQ = 288,
+    NE = 289,
+    LE = 290,
+    GE = 291,
+    PLUS = 292,
+    MINUS = 293,
+    STAR = 294,
+    DIV = 295,
+    MOD = 296,
+    NOT = 297,
+    INTLIT = 298,
+    REALLIT = 299
   };
 #endif
 /* Tokens.  */
-#define SEMICOLON 258
+#define PACKAGE 258
 #define ID 259
-#define PACKAGE 260
+#define SEMICOLON 260
 #define VAR 261
 #define LPAR 262
 #define RPAR 263
@@ -105,46 +105,46 @@ extern int yydebug;
 #define BOOL 266
 #define STRING 267
 #define FUNC 268
-#define LBRACE 269
-#define RBRACE 270
-#define ASSIGN 271
-#define IF 272
-#define ELSE 273
-#define FOR 274
-#define RETURN 275
-#define PRINT 276
-#define COMMA 277
-#define BLANKID 278
-#define PARSEINT 279
-#define CMDARGS 280
-#define LSQ 281
-#define RSQ 282
-#define OR 283
-#define AND 284
-#define LT 285
-#define GT 286
-#define EQ 287
-#define NE 288
-#define LE 289
-#define GE 290
-#define PLUS 291
-#define MINUS 292
-#define STAR 293
-#define DIV 294
-#define MOD 295
-#define NOT 296
-#define INTLIT 297
-#define REALLIT 298
-#define STRLIT 299
+#define COMMA 269
+#define LBRACE 270
+#define RBRACE 271
+#define ASSIGN 272
+#define IF 273
+#define ELSE 274
+#define FOR 275
+#define RETURN 276
+#define PRINT 277
+#define STRLIT 278
+#define BLANKID 279
+#define PARSEINT 280
+#define CMDARGS 281
+#define LSQ 282
+#define RSQ 283
+#define OR 284
+#define AND 285
+#define LT 286
+#define GT 287
+#define EQ 288
+#define NE 289
+#define LE 290
+#define GE 291
+#define PLUS 292
+#define MINUS 293
+#define STAR 294
+#define DIV 295
+#define MOD 296
+#define NOT 297
+#define INTLIT 298
+#define REALLIT 299
 
 /* Value type.  */
 #if ! defined YYSTYPE && ! defined YYSTYPE_IS_DECLARED
 union YYSTYPE
 {
-#line 22 "gocompiler.y"
+#line 13 "gocompiler.y"
 
     char* tkn;
-    struct Node *node;
+       
 
 #line 150 "y.tab.h"
 
