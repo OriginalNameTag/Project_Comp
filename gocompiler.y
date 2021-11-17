@@ -7,15 +7,16 @@
         #include <string.h>
 
         #include "y.tab.h"
+        #include "struct.h"
 
         int yylex (void);
         void yyerror(char* s);
-        struct node * root = NULL;
+        struct Node * root = NULL;
 %}
 
 %union{
         char* tkn;
-        struct node * node;
+        struct Node * node;
 }
 
 %token <tkn> PACKAGE ID SEMICOLON VAR LPAR RPAR INT FLOAT32 BOOL STRING FUNC COMMA LBRACE RBRACE ASSIGN IF ELSE FOR RETURN PRINT STRLIT BLANKID PARSEINT CMDARGS LSQ RSQ OR AND LT GT EQ NE LE GE PLUS MINUS STAR DIV MOD NOT INTLIT REALLIT
@@ -44,7 +45,7 @@
 %%
 
 Program: 
-        PACKAGE ID SEMICOLON Declarations               {$$ = root;}
+        PACKAGE ID SEMICOLON Declarations               {root = create_node("Program", NULL); add_son(root, $4)}
 ;
 Declarations:
         Declarations VarDeclaration SEMICOLON           {$$ = $2;}
@@ -63,10 +64,10 @@ VarSpecHelper:
         |                                               {$$ = NULL;}       
 ;
 Type:
-        INT                                             {$$ = $1;}
-        | FLOAT32                                       {$$ = $1;}
-        | BOOL                                          {$$ = $1;}
-        | STRING                                        {$$ = $1;}
+        INT                                             {$$ = create_node("Int", NULL)}
+        | FLOAT32                                       {$$ = create_node("Float32", NULL)}
+        | BOOL                                          {$$ = create_node("Bool", NULL)}
+        | STRING                                        {$$ = create_node("String", NULL)}
 ;
 FuncDeclaration:
         FUNC ID LPAR Parameters RPAR Type FuncBody      {$$ = $;}
@@ -120,25 +121,25 @@ FuncInvocationHelper:
         |                                               {$$ = NULL;}
 ;
 Expr:
-        Expr OR Expr                                    {$$ = $1;}
-        | Expr AND Expr                                 {$$ = $1;}
-        | Expr LT Expr                                  {$$ = $1;}
-        | Expr GT Expr                                  {$$ = $1;}
-        | Expr EQ Expr                                  {$$ = $1;}
-        | Expr NE Expr                                  {$$ = $1;}
-        | Expr LE Expr                                  {$$ = $1;}
-        | Expr GE Expr                                  {$$ = $1;}
-        | Expr PLUS Expr                                {$$ = $1;}
-        | Expr MINUS Expr                               {$$ = $1;}
-        | Expr STAR Expr                                {$$ = $1;}
-        | Expr DIV Expr                                 {$$ = $1;}
-        | Expr MOD Expr                                 {$$ = $1;}
+        Expr OR Expr                                    {$$ = $create_node("Or",NULL); add_son($$, $1); add_son($$, $3);}
+        | Expr AND Expr                                 {$$ = $create_node(); add_son($$, $1); add_son($$, $3);}
+        | Expr LT Expr                                  {$$ = $create_node(); add_son($$, $1); add_son($$, $3);}
+        | Expr GT Expr                                  {$$ = $create_node(); add_son($$, $1); add_son($$, $3);}
+        | Expr EQ Expr                                  {$$ = $create_node(); add_son($$, $1); add_son($$, $3);}
+        | Expr NE Expr                                  {$$ = $create_node(); add_son($$, $1); add_son($$, $3);}
+        | Expr LE Expr                                  {$$ = $create_node(); add_son($$, $1); add_son($$, $3);}
+        | Expr GE Expr                                  {$$ = $create_node(); add_son($$, $1); add_son($$, $3);}
+        | Expr PLUS Expr                                {$$ = $create_node(); add_son($$, $1); add_son($$, $3);}
+        | Expr MINUS Expr                               {$$ = $create_node(); add_son($$, $1); add_son($$, $3);}
+        | Expr STAR Expr                                {$$ = $create_node(); add_son($$, $1); add_son($$, $3);}
+        | Expr DIV Expr                                 {$$ = $create_node(); add_son($$, $1); add_son($$, $3);}
+        | Expr MOD Expr                                 {$$ = $create_node(); add_son($$, $1); add_son($$, $3);}
         | NOT Expr                                      {$$ = $1;}
         | MINUS Expr                                    {$$ = $1;}
         | PLUS Expr                                     {$$ = $1;}
-        | INTLIT                                        {$$ = $1;}
-        | REALLIT                                       {$$ = $1;}
-        | ID                                            {$$ = $1;}
+        | INTLIT                                        {$$ = create_node("Intlit", $1);}
+        | REALLIT                                       {$$ = create_node("Reallit", $1);}
+        | ID                                            {$$ = create_node("Id", $1);}
         | FuncInvocation                                {$$ = $1;}
         | LPAR Expr RPAR                                {$$ = $2;}
 ;
