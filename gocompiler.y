@@ -48,32 +48,32 @@ Program:
         PACKAGE ID SEMICOLON Declarations               {root = create_node("Program", NULL); add_son(root, $4)}
 ;
 Declarations:
-        Declarations VarDeclaration SEMICOLON           {$$ = $2;}
-        | Declarations FuncDeclaration SEMICOLON        {$$ = $2;}
+        Declarations VarDeclaration SEMICOLON           {$$ = create_node("VarDeclaration", NULL); add_son();}
+        | Declarations FuncDeclaration SEMICOLON        {$$ = create_node("FuncDeclaration", NULL); add_son($$, $1);}
         |                                               {$$ = NULL;}
 ;
 VarDeclaration:
-        VAR VarSpec                                     {$$ = $2;}
+        VAR VarSpec                                     {$$ = create_node("VarDeclaration", NULL);  }
         | VAR LPAR VarSpec SEMICOLON RPAR               {$$ = $2;}
 ;
 VarSpec:
-        ID VarSpecHelper Type                           {$$ = $2;}
+        ID VarSpecHelper Type                           {$$ = $3;}
 ;
 VarSpecHelper:
-        VarSpecHelper COMMA ID                          {$$ = $1;}
+        VarSpecHelper COMMA ID                          {$$ = create_node("Id", NULL); add_son();}
         |                                               {$$ = NULL;}       
 ;
 Type:
-        INT                                             {$$ = create_node("Int", NULL)}
-        | FLOAT32                                       {$$ = create_node("Float32", NULL)}
-        | BOOL                                          {$$ = create_node("Bool", NULL)}
-        | STRING                                        {$$ = create_node("String", NULL)}
+        INT                                             {$$ = create_node("Int", $1);}
+        | FLOAT32                                       {$$ = create_node("Float32", $1);}
+        | BOOL                                          {$$ = create_node("Bool", $1);}
+        | STRING                                        {$$ = create_node("String", $1);}
 ;
 FuncDeclaration:
         FUNC ID LPAR Parameters RPAR Type FuncBody      {$$ = $;}
         | FUNC ID LPAR RPAR Type FuncBody               {$$ = $;}
         | FUNC ID LPAR Parameters RPAR FuncBody         {$$ = $;}
-        | FUNC ID LPAR RPAR FuncBody                    //dont need?
+        | FUNC ID LPAR RPAR FuncBody                    
 ;
 Parameters:
         ID Type ParametersHelper                        {$$ = $;}
@@ -121,26 +121,26 @@ FuncInvocationHelper:
         |                                               {$$ = NULL;}
 ;
 Expr:
-        Expr OR Expr                                    {$$ = $create_node("Or",NULL); add_son($$, $1); add_son($$, $3);}
-        | Expr AND Expr                                 {$$ = $create_node(); add_son($$, $1); add_son($$, $3);}
-        | Expr LT Expr                                  {$$ = $create_node(); add_son($$, $1); add_son($$, $3);}
-        | Expr GT Expr                                  {$$ = $create_node(); add_son($$, $1); add_son($$, $3);}
-        | Expr EQ Expr                                  {$$ = $create_node(); add_son($$, $1); add_son($$, $3);}
-        | Expr NE Expr                                  {$$ = $create_node(); add_son($$, $1); add_son($$, $3);}
-        | Expr LE Expr                                  {$$ = $create_node(); add_son($$, $1); add_son($$, $3);}
-        | Expr GE Expr                                  {$$ = $create_node(); add_son($$, $1); add_son($$, $3);}
-        | Expr PLUS Expr                                {$$ = $create_node(); add_son($$, $1); add_son($$, $3);}
-        | Expr MINUS Expr                               {$$ = $create_node(); add_son($$, $1); add_son($$, $3);}
-        | Expr STAR Expr                                {$$ = $create_node(); add_son($$, $1); add_son($$, $3);}
-        | Expr DIV Expr                                 {$$ = $create_node(); add_son($$, $1); add_son($$, $3);}
-        | Expr MOD Expr                                 {$$ = $create_node(); add_son($$, $1); add_son($$, $3);}
-        | NOT Expr                                      {$$ = $1;}
-        | MINUS Expr                                    {$$ = $1;}
-        | PLUS Expr                                     {$$ = $1;}
+        Expr OR Expr                                    {$$ = create_node("Or", NULL); add_son($$, $1); add_sibling($1, $3);}
+        | Expr AND Expr                                 {$$ = create_node("And", NULL); add_son($$, $1); add_son($1, $3);}
+        | Expr LT Expr                                  {$$ = create_node("Lt", NULL); add_son($$, $1); add_son($1, $3);}
+        | Expr GT Expr                                  {$$ = create_node("Gt", NULL); add_son($$, $1); add_son($1, $3);}
+        | Expr EQ Expr                                  {$$ = create_node("Eq", NULL); add_son($$, $1); add_son($1, $3);}
+        | Expr NE Expr                                  {$$ = create_node("Ne", NULL); add_son($$, $1); add_son($1, $3);}
+        | Expr LE Expr                                  {$$ = create_node("Le", NULL); add_son($$, $1); add_son($1, $3);}
+        | Expr GE Expr                                  {$$ = create_node("Ge", NULL); add_son($$, $1); add_son($1, $3);}
+        | Expr PLUS Expr                                {$$ = create_node("Add", NULL); add_son($$, $1); add_son($1, $3);}
+        | Expr MINUS Expr                               {$$ = create_node("Sub", NULL); add_son($$, $1); add_son($1, $3);}
+        | Expr STAR Expr                                {$$ = create_node("Mul", NULL); add_son($$, $1); add_son($1, $3);}
+        | Expr DIV Expr                                 {$$ = create_node("Div", NULL); add_son($$, $1); add_son($1, $3);}
+        | Expr MOD Expr                                 {$$ = create_node("Mod", NULL); add_son($$, $1); add_son($1, $3);}
+        | NOT Expr                                      {$$ = create_node("Not", NULL), add_son($$, $2);}
+        | MINUS Expr                                    {$$ = create_node("Minus", NULL), add_son($$, $2);}
+        | PLUS Expr                                     {$$ = create_node("Plus", NULL), add_son($$, $2);}
         | INTLIT                                        {$$ = create_node("Intlit", $1);}
         | REALLIT                                       {$$ = create_node("Reallit", $1);}
         | ID                                            {$$ = create_node("Id", $1);}
-        | FuncInvocation                                {$$ = $1;}
+        | FuncInvocation                                {$$ = create_node("idk", NULL);}
         | LPAR Expr RPAR                                {$$ = $2;}
 ;
 
