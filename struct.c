@@ -21,7 +21,7 @@ Node *create_node(char* token, char* value){
 
 //Creates and ads a son to given parent
 Node *add_son(Node * parent, Node * son){
-    //if give son is NULL well that's about it
+    //if given son is NULL well that's about it
     if(son == NULL){
         return NULL;
     }
@@ -30,7 +30,8 @@ Node *add_son(Node * parent, Node * son){
         parent -> son = (Node *)(malloc)(sizeof(Node));
         parent -> son = son;
     }
-    //if the son already exists well idk
+    //if the son already exists checks every son of given parent until there is a son that has no sibling
+    // then adds the node 'son' to the empty node
     else{
         Node *aux = (Node *)(malloc)(sizeof(Node));
         Node *old = (Node *)(malloc)(sizeof(Node));
@@ -77,7 +78,7 @@ void print_tree(Node *node, int numb){
         return;
     }
     for(int i = 0; i < numb; i++){
-        pritnf("..");
+        printf("..");
     }
     if(node -> value != NULL){
         printf("%s(%s)\n",  node -> token, node -> value );
@@ -99,6 +100,5 @@ void print_tree(Node *node, int numb){
 
     free(root); //Clears the tree after printing it
 };
-
 
 
