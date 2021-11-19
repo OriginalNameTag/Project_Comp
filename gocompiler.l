@@ -82,15 +82,15 @@ escapeERROR     [^\n\r\"\\]
 "\t"|" "            {if (lflag) column++;}
 
 
-{hexadecimal}       {if (lflag) fprintf(yyout, "INTLIT(%s)\n", yytext);column += yyleng; semi = 1;}
-{octal}             {if (lflag) fprintf(yyout, "INTLIT(%s)\n", yytext);column += yyleng; semi = 1;}
+{hexadecimal}       {if (lflag) {fprintf(yyout, "INTLIT(%s)\n", yytext);column += yyleng; semi = 1;} else {yylval.tkn = strdup(yytext); return INTLIT;}}
+{octal}             {if (lflag) {fprintf(yyout, "INTLIT(%s)\n", yytext);column += yyleng; semi = 1;} else {yylval.tkn = strdup(yytext); return INTLIT;}}
 {octalERROR}        {if (lflag) fprintf(yyout, "Line %d, column %d: invalid octal constant (%s)\n", yylineno, column, yytext); column += yyleng;};
-{real}		        {if (lflag) fprintf(yyout, "REALLIT(%s)\n", yytext); column += yyleng; semi = 1;}
-{intliteral}        {if (lflag) fprintf(yyout, "INTLIT(%s)\n", yytext); column += yyleng; semi = 1;}
+{real}		        {if (lflag) {fprintf(yyout, "REALLIT(%s)\n", yytext); column += yyleng; semi = 1;} else {yylval.tkn = strdup(yytext); return REALLIT;}}
+{intliteral}        {if (lflag) {fprintf(yyout, "INTLIT(%s)\n", yytext); column += yyleng; semi = 1;} else {yylval.tkn = strdup(yytext); return INTLIT;}}
 
 {reserved}          {if (lflag) {fprintf(yyout, "RESERVED(%s)\n", yytext); column += yyleng; semi = 0;} else return RESERVED;}
-{newline}           {if (lflag && semi) {semi = 0; line += 2; column = 1; {fprintf(yyout, "SEMICOLON\n");}}}
-{argument}          {if (lflag) fprintf(yyout, "ID(%s)\n", yytext); column += yyleng; semi = 1;}
+{newline}           {if (semi)  {semi = 0; column = 1;if (lflag) {fprintf(yyout, "SEMICOLON\n");}else return SEMICOLON;}}
+{argument}          {if (lflag) {fprintf(yyout, "ID(%s)\n", yytext); column += yyleng; semi = 1;} else{yylval.tkn = strdup(yytext);return ID;}; }
 .                   {if (lflag) fprintf(yyout, "Line %d, column %d: illegal character (%s)\n", yylineno, column, yytext);semi=0; column += yyleng;}
 
 
@@ -99,14 +99,14 @@ escapeERROR     [^\n\r\"\\]
 <STRLITERAL>\\                                   {if (lflag) fprintf(yyout, "Line %d, column %d: invalid escape sequence (\\)\n", yylineno, column); semi=0; column+=yyleng; error = 1;}
 <STRLITERAL>{escape}                             {column += yyleng;}
 <STRLITERAL>\\{escapeERROR}                      {if (lflag) fprintf(yyout, "Line %d, column %d: invalid escape sequence (%s)\n", yylineno, column, yytext); semi=0; column += yyleng; error=1;}
-<STRLITERAL>({escape}|{escapeERROR})*\"          {if (lflag && error==0) {fprintf(yyout, "STRLIT(\"%s)\n",yytext);  semi = 1;}column += yyleng; BEGIN 0;}
-<STRLITERAL><<EOF>>                              {if (lflag) fprintf(yyout, "Line %d, column %d: unterminated string literal\n", yylineno, temp);semi=0;column+=yyleng; exit(0);}
+<STRLITERAL>({escape}|{escapeERROR})*\"          {if (lflag) {fprintf(yyout, "STRLIT(\"%s)\n",yytext);  semi = 1;column += yyleng;} else {yylval.tkn = strdup(yytext); return STRLIT; BEGIN 0;}}
+<STRLITERAL><<EOF>>                              {if (lflag) fprintf(yyout, "Line %d, column %d: unterminated string literal\n", yylineno, temp);semi=0;column+=yyleng; yyterminate();}
 <STRLITERAL>.                                    {column += yyleng;}
  
 
 <COMMENT>"*/"      {column = temp + 2; temp = 1; BEGIN 0;}
 <COMMENT>{newline} {temp = 1;}
-<COMMENT><<EOF>>   {if (lflag && semi) fprintf(yyout, "SEMICOLON\n"); fprintf(yyout, "Line %d, column %d: unterminated comment\n", line, column); exit(0);}
+<COMMENT><<EOF>>   {if (semi) {semi = 0; if (lflag)fprintf(yyout, "SEMICOLON\n");else return SEMICOLON;} fprintf(yyout, "Line %d, column %d: unterminated comment\n", line, column); yyterminate();}
 <COMMENT>.         {temp++;}
  
 
@@ -115,7 +115,7 @@ escapeERROR     [^\n\r\"\\]
 <LINECOMMENT>.         {column += yyleng;}
 
 
-<<EOF>>                 {if (lflag && semi) fprintf(yyout, "SEMICOLON\n"); exit(0);}
+<<EOF>>                 {if (semi){semi = 0; if (lflag){ fprintf(yyout, "SEMICOLON\n");} else return SEMICOLON; yyterminate();}}
 
 
 %%

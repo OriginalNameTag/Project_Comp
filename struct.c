@@ -16,6 +16,7 @@ Node *create_node(char* token, char* value){
     n -> sibling = NULL;
     n -> token = token;
     n -> value = value;
+    printf("Node created: %s\n", n->token);
     return n;
 }
 
@@ -75,6 +76,7 @@ Node *add_sibling(Node * someone, Node * sibling){
 void print_tree(Node *node, int numb){
 
     if(root == NULL){
+        printf("Root %s is null\n",root->token);
         return;
     }
     for(int i = 0; i < numb; i++){

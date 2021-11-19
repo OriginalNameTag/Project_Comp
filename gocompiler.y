@@ -45,7 +45,7 @@
 %%
 
 Program: 
-        PACKAGE ID SEMICOLON Declarations               {$$ = root = create_node("Program", NULL); add_son(root, $4);}
+        PACKAGE ID SEMICOLON Declarations               {$$ = root = create_node("Program", NULL); add_son(root, $4);printf("root was created\n");}
 ;
 Declarations:
         Declarations VarDeclaration SEMICOLON           {$$ = $2;}
