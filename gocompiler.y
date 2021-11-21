@@ -58,22 +58,21 @@ Type:
 ;
 
 VarDeclaration:
-        VAR VarSpec                                     {$$ = create_node("VarDecl", NULL);                                                     //done
-                                                        add_son($$,$2);
-                                                        }
-        | VAR LPAR VarSpec SEMICOLON RPAR               {$$ = create_node("VarDecl", NULL);
-                                                        add_son($$,$3);
-                                                        }
+        VAR VarSpec                                     {$$ = $2;}
+        | VAR LPAR VarSpec SEMICOLON RPAR               {$$ = $3;}
 ;
 
 VarSpec:
-        ID VarSpecHelper Type                           {$$=$3;
-                                                        
-                                                        add_sibling($$, create_node("Id", $1));} 
+        ID VarSpecHelper Type                           {if($2==NULL){
+                                                        $$=create_node("VarDecl", NULL);
+                                                        add_son($$, $3);
+                                                        add_sibling($3, create_node("Id", $1));}
+                                                        else{$$=$2;}
+        } 
 ;
 VarSpecHelper:
         VarSpecHelper COMMA ID                          {if($1!=NULL){$$ = $1;}
-                                                        else {$$ = create_node("Id", NULL);}}
+                                                        else {$$ = create_node("VarDecl", NULL); add_son($$,create_node("Id", $3));}}
                                                          
 
         |                                               {$$ = NULL;}       
@@ -222,10 +221,10 @@ Statement:
 ;
 StatementHelper:
         StatementHelper Statement SEMICOLON             {
-                                                        if($1 == NULL && $2 == NULL) $$ = NULL;
-                                                        else if($1 == NULL) $$ = $2;
+                                                        if($1 == NULL) $$ = $2;
                                                         else if($2 == NULL) $$ = $1;
-                                                        else $$ = add_sibling($2, $1);
+                                                        else $$ = $2; 
+                                                        add_sibling($$, $1);
                                                         }
         |                                               {$$ = NULL;}
 ;
@@ -248,7 +247,7 @@ FuncInvocation:
         | ID LPAR error RPAR                            {;}
 ;
 FuncInvocationHelper:
-        FuncInvocationHelper COMMA Expr                 {
+        FuncInvocationHelper COMMA Expr                 {                                                                                            //todd
                                                         if($1 == NULL) $$ = $3;
                                                         else if($3 == NULL) $$ = $1;
                                                         else $$ = add_sibling($3, $1);
