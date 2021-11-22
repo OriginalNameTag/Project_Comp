@@ -62,22 +62,34 @@ Node *add_sibling(Node * someone, Node * sibling){
     Node *old = (Node *)(malloc)(sizeof(Node));
     old = someone;
     aux = someone -> sibling;
-
     while(aux != NULL){
         old = aux;
         aux = aux -> sibling; 
     }
     
     old -> sibling = (Node *)(malloc)(sizeof(Node));
+    
     old -> sibling = sibling;
 
     return someone;
 }
 
+void save_type(Node* first, Node* type) {
+    Node* aux = first->sibling;
+    Node* temp;
+    while (aux) {
+        Node* newtype = create_node(type->token, type->value);
+        temp = aux->son;
+        aux->son = newtype;
+        aux->son->sibling = temp; 
+        aux = aux->sibling;
+    }
+}
+
 void print_tree(Node *node, int numb){
 
     if(root == NULL){
-        printf("Root %s is null\n",root->token);
+       // printf("Root %s is null\n",root->token);
         return;
     }
     for(int i = 0; i < numb; i++){

@@ -14,7 +14,9 @@
     int temp=0;
     int error=0;
     Node* root;
+    int col_yacc = 1, line_yacc = 1;
     int yydebug=1;
+    int erro = 0;
 
 %}
 letter          [A-Za-z]
@@ -42,81 +44,81 @@ escapeERROR     [^\n\r\"\\]
 \"                  {temp = column ; column += yyleng; error = 0;BEGIN STRLITERAL;}
 "/*"                {temp = column + 2; line = yylineno; BEGIN COMMENT;}
 
-";"                 {column += yyleng; semi = 0; if (lflag) {fprintf(yyout, "SEMICOLON\n");} else return SEMICOLON;}
-","                 {column += yyleng; semi = 0; if (lflag) {fprintf(yyout, "COMMA\n");} else return COMMA;}
-"_"                 {column += yyleng; semi = 0; if (lflag) {fprintf(yyout, "BLANKID\n");} else return BLANKID;}
-"="                 {column += yyleng; semi = 0; if (lflag) {fprintf(yyout, "ASSIGN\n");} else return ASSIGN;}
-"*"                 {column += yyleng; semi = 0; if (lflag) {fprintf(yyout, "STAR\n");} else return STAR;}
-"/"                 {column += yyleng; semi = 0; if (lflag) {fprintf(yyout, "DIV\n");} else return DIV;}
-"-"                 {column += yyleng; semi = 0; if (lflag) {fprintf(yyout, "MINUS\n");} else return MINUS;}
-"+"                 {column += yyleng; semi = 0; if (lflag) {fprintf(yyout, "PLUS\n");} else return PLUS;}
-"=="                {column += yyleng; semi = 0; if (lflag) {fprintf(yyout, "EQ\n");} else return EQ;}
-">="                {column += yyleng; semi = 0; if (lflag) {fprintf(yyout, "GE\n");} else return GE;}
-">"                 {column += yyleng; semi = 0; if (lflag) {fprintf(yyout, "GT\n");} else return GT;}
-"{"                 {column += yyleng; semi = 0; if (lflag) {fprintf(yyout, "LBRACE\n");} else return LBRACE;}
-"<="                {column += yyleng; semi = 0; if (lflag) {fprintf(yyout, "LE\n");} else return LE;}
-"("                 {column += yyleng; semi = 0; if (lflag) {fprintf(yyout, "LPAR\n");} else return LPAR;}
-"["                 {column += yyleng; semi = 0; if (lflag) {fprintf(yyout, "LSQ\n");} else return LSQ;}
-"<"                 {column += yyleng; semi = 0; if (lflag) {fprintf(yyout, "LT\n");} else return LT;}
-"%"                 {column += yyleng; semi = 0; if (lflag) {fprintf(yyout, "MOD\n");} else return MOD;}
-"!="                {column += yyleng; semi = 0; if (lflag) {fprintf(yyout, "NE\n");} else return NE;}
-"!"                 {column += yyleng; semi = 0; if (lflag) {fprintf(yyout, "NOT\n");} else return NOT;}
-"&&"                {column += yyleng; semi = 0; if (lflag) {fprintf(yyout, "AND\n");} else return AND;}
-"||"                {column += yyleng; semi = 0; if (lflag) {fprintf(yyout, "OR\n");} else return OR;}
-"}"                 {column += yyleng; semi = 1; if (lflag) fprintf(yyout, "RBRACE\n"); else return RBRACE;}
-")"                 {column += yyleng; semi = 1; if (lflag) {fprintf(yyout, "RPAR\n");} else return RPAR;}
-"]"                 {column += yyleng; semi = 1; if (lflag) {fprintf(yyout, "RSQ\n");} else return RSQ;}
-"package"           {column += yyleng; semi = 0; if (lflag) {fprintf(yyout, "PACKAGE\n");} else return PACKAGE;}
-"return"            {column += yyleng; semi = 1; if (lflag) {fprintf(yyout, "RETURN\n");} else return RETURN;}
-"else"              {column += yyleng; semi = 0; if (lflag) {fprintf(yyout, "ELSE\n");} else return ELSE;}
-"for"               {column += yyleng; semi = 0; if (lflag) {fprintf(yyout, "FOR\n");} else return FOR;}
-"if"                {column += yyleng; semi = 0; if (lflag) {fprintf(yyout, "IF\n");} else return IF;}
-"var"               {column += yyleng; semi = 0; if (lflag) {fprintf(yyout, "VAR\n");} else return VAR;}
-"int"               {column += yyleng; semi = 0; if (lflag) {fprintf(yyout, "INT\n");} else return INT;}
-"float32"           {column += yyleng; semi = 0; if (lflag) {fprintf(yyout, "FLOAT32\n");} else return FLOAT32;}
-"bool"              {column += yyleng; semi = 0; if (lflag) {fprintf(yyout, "BOOL\n");} else return BOOL;}
-"string"            {column += yyleng; semi = 0; if (lflag) {fprintf(yyout, "STRING\n");} else return STRING;}
-"fmt.Println"       {column += yyleng; semi = 0; if (lflag) {fprintf(yyout, "PRINT\n");} else return PRINT;}
-"strconv.Atoi"      {column += yyleng; semi = 0; if (lflag) {fprintf(yyout, "PARSEINT\n");} else return PARSEINT;}
-"func"              {column += yyleng; semi = 0; if (lflag) {fprintf(yyout, "FUNC\n");} else return FUNC;}
-"os.Args"           {column += yyleng; semi = 0; if (lflag) {fprintf(yyout, "CMDARGS\n");} else return CMDARGS;}
-"\t"|" "            {if (lflag) column++;}
+";"                 {col_yacc = column; line_yacc = yylineno; column+= yyleng; semi = 0; if (lflag) {fprintf(yyout, "SEMICOLON\n");} else return SEMICOLON;}
+","                 {col_yacc = column; line_yacc = yylineno; column+= yyleng; semi = 0; if (lflag) {fprintf(yyout, "COMMA\n");} else return COMMA;}
+"_"                 {col_yacc = column; line_yacc = yylineno; column+= yyleng; semi = 0; if (lflag) {fprintf(yyout, "BLANKID\n");} else return BLANKID;}
+"="                 {col_yacc = column; line_yacc = yylineno; column+= yyleng; semi = 0; if (lflag) {fprintf(yyout, "ASSIGN\n");} else return ASSIGN;}
+"*"                 {col_yacc = column; line_yacc = yylineno; column+= yyleng; semi = 0; if (lflag) {fprintf(yyout, "STAR\n");} else return STAR;}
+"/"                 {col_yacc = column; line_yacc = yylineno; column+= yyleng; semi = 0; if (lflag) {fprintf(yyout, "DIV\n");} else return DIV;}
+"-"                 {col_yacc = column; line_yacc = yylineno; column+= yyleng; semi = 0; if (lflag) {fprintf(yyout, "MINUS\n");} else return MINUS;}
+"+"                 {col_yacc = column; line_yacc = yylineno; column+= yyleng; semi = 0; if (lflag) {fprintf(yyout, "PLUS\n");} else return PLUS;}
+"=="                {col_yacc = column; line_yacc = yylineno; column+= yyleng; semi = 0; if (lflag) {fprintf(yyout, "EQ\n");} else return EQ;}
+">="                {col_yacc = column; line_yacc = yylineno; column+= yyleng; semi = 0; if (lflag) {fprintf(yyout, "GE\n");} else return GE;}
+">"                 {col_yacc = column; line_yacc = yylineno; column+= yyleng; semi = 0; if (lflag) {fprintf(yyout, "GT\n");} else return GT;}
+"{"                 {col_yacc = column; line_yacc = yylineno; column+= yyleng; semi = 0; if (lflag) {fprintf(yyout, "LBRACE\n");} else return LBRACE;}
+"<="                {col_yacc = column; line_yacc = yylineno; column+= yyleng; semi = 0; if (lflag) {fprintf(yyout, "LE\n");} else return LE;}
+"("                 {col_yacc = column; line_yacc = yylineno; column+= yyleng; semi = 0; if (lflag) {fprintf(yyout, "LPAR\n");} else return LPAR;}
+"["                 {col_yacc = column; line_yacc = yylineno; column+= yyleng; semi = 0; if (lflag) {fprintf(yyout, "LSQ\n");} else return LSQ;}
+"<"                 {col_yacc = column; line_yacc = yylineno; column+= yyleng; semi = 0; if (lflag) {fprintf(yyout, "LT\n");} else return LT;}
+"%"                 {col_yacc = column; line_yacc = yylineno; column+= yyleng; semi = 0; if (lflag) {fprintf(yyout, "MOD\n");} else return MOD;}
+"!="                {col_yacc = column; line_yacc = yylineno; column+= yyleng; semi = 0; if (lflag) {fprintf(yyout, "NE\n");} else return NE;}
+"!"                 {col_yacc = column; line_yacc = yylineno; column+= yyleng; semi = 0; if (lflag) {fprintf(yyout, "NOT\n");} else return NOT;}
+"&&"                {col_yacc = column; line_yacc = yylineno; column+= yyleng; semi = 0; if (lflag) {fprintf(yyout, "AND\n");} else return AND;}
+"||"                {col_yacc = column; line_yacc = yylineno; column+= yyleng; semi = 0; if (lflag) {fprintf(yyout, "OR\n");} else return OR;}
+"}"                 {col_yacc = column; line_yacc = yylineno; column+= yyleng; semi = 1; if (lflag) fprintf(yyout, "RBRACE\n"); else return RBRACE;}
+")"                 {col_yacc = column; line_yacc = yylineno; column+= yyleng; semi = 1; if (lflag) {fprintf(yyout, "RPAR\n");} else return RPAR;}
+"]"                 {col_yacc = column; line_yacc = yylineno; column+= yyleng; semi = 1; if (lflag) {fprintf(yyout, "RSQ\n");} else return RSQ;}
+"package"           {col_yacc = column; line_yacc = yylineno; column+= yyleng; semi = 0; if (lflag) {fprintf(yyout, "PACKAGE\n");} else return PACKAGE;}
+"return"            {col_yacc = column; line_yacc = yylineno; column+= yyleng; semi = 1; if (lflag) {fprintf(yyout, "RETURN\n");} else return RETURN;}
+"else"              {col_yacc = column; line_yacc = yylineno; column+= yyleng; semi = 0; if (lflag) {fprintf(yyout, "ELSE\n");} else return ELSE;}
+"for"               {col_yacc = column; line_yacc = yylineno; column+= yyleng; semi = 0; if (lflag) {fprintf(yyout, "FOR\n");} else return FOR;}
+"if"                {col_yacc = column; line_yacc = yylineno; column+= yyleng; semi = 0; if (lflag) {fprintf(yyout, "IF\n");} else return IF;}
+"var"               {col_yacc = column; line_yacc = yylineno; column+= yyleng; semi = 0; if (lflag) {fprintf(yyout, "VAR\n");} else return VAR;}
+"int"               {col_yacc = column; line_yacc = yylineno; column+= yyleng; semi = 0; if (lflag) {fprintf(yyout, "INT\n");} else return INT;}
+"float32"           {col_yacc = column; line_yacc = yylineno; column+= yyleng; semi = 0; if (lflag) {fprintf(yyout, "FLOAT32\n");} else return FLOAT32;}
+"bool"              {col_yacc = column; line_yacc = yylineno; column+= yyleng; semi = 0; if (lflag) {fprintf(yyout, "BOOL\n");} else return BOOL;}
+"string"            {col_yacc = column; line_yacc = yylineno; column+= yyleng; semi = 0; if (lflag) {fprintf(yyout, "STRING\n");} else return STRING;}
+"fmt.Println"       {col_yacc = column; line_yacc = yylineno; column+= yyleng; semi = 0; if (lflag) {fprintf(yyout, "PRINT\n");} else return PRINT;}
+"strconv.Atoi"      {col_yacc = column; line_yacc = yylineno; column+= yyleng; semi = 0; if (lflag) {fprintf(yyout, "PARSEINT\n");} else return PARSEINT;}
+"func"              {col_yacc = column; line_yacc = yylineno; column+= yyleng; semi = 0; if (lflag) {fprintf(yyout, "FUNC\n");} else return FUNC;}
+"os.Args"           {col_yacc = column; line_yacc = yylineno; column+= yyleng; semi = 0; if (lflag) {fprintf(yyout, "CMDARGS\n");} else return CMDARGS;}
+"\t"|" "            {column++;}
 
 
-{hexadecimal}       {column += yyleng; semi = 1; if (lflag) {fprintf(yyout, "INTLIT(%s)\n", yytext);} else {yylval.tkn = strdup(yytext); return INTLIT;}}
-{octal}             {column += yyleng; semi = 1; if (lflag) {fprintf(yyout, "INTLIT(%s)\n", yytext);} else {yylval.tkn = strdup(yytext); return INTLIT;}}
+{hexadecimal}       {col_yacc = column; line_yacc = yylineno; column+= yyleng; semi = 1; if (lflag) {fprintf(yyout, "INTLIT(%s)\n", yytext);} else {yylval.tkn = strdup(yytext); return INTLIT;}}
+{octal}             {col_yacc = column; line_yacc = yylineno; column+= yyleng; semi = 1; if (lflag) {fprintf(yyout, "INTLIT(%s)\n", yytext);} else {yylval.tkn = strdup(yytext); return INTLIT;}}
 {octalERROR}        {if (lflag) fprintf(yyout, "Line %d, column %d: invalid octal constant (%s)\n", yylineno, column, yytext); column += yyleng;};
-{real}		        {column += yyleng; semi = 1; if (lflag) {fprintf(yyout, "REALLIT(%s)\n", yytext); } else {yylval.tkn = strdup(yytext); return REALLIT;}}
-{intliteral}        {column += yyleng; semi = 1; if (lflag) {fprintf(yyout, "INTLIT(%s)\n", yytext);} else {yylval.tkn = strdup(yytext); return INTLIT;}}
-
-{reserved}          {column += yyleng; semi = 0; if (lflag) {fprintf(yyout, "RESERVED(%s)\n", yytext);} else return RESERVED;}
-{newline}           {if (semi)  {semi = 0; column = 1 ;if (lflag) {fprintf(yyout, "SEMICOLON\n");} else return SEMICOLON;}}
-{argument}          {column += yyleng; semi = 1; if (lflag) {fprintf(yyout, "ID(%s)\n", yytext);} else{yylval.tkn = strdup(yytext);return ID;}; }
+{real}		        {col_yacc = column; line_yacc = yylineno; column+= yyleng; semi = 1; if (lflag) {fprintf(yyout, "REALLIT(%s)\n", yytext); } else {yylval.tkn = strdup(yytext); return REALLIT;}}
+{intliteral}        {col_yacc = column; line_yacc = yylineno; column+= yyleng; semi = 1; if (lflag) {fprintf(yyout, "INTLIT(%s)\n", yytext);} else {yylval.tkn = strdup(yytext); return INTLIT;}}
+{reserved}          {col_yacc = column; line_yacc = yylineno; column+= yyleng; semi = 0; if (lflag) {fprintf(yyout, "RESERVED(%s)\n", yytext);} else return RESERVED;}
+{newline}           {col_yacc = column; line_yacc = yylineno-1; column = 1; if (semi)  {semi = 0; if (lflag) {fprintf(yyout, "SEMICOLON\n");} else return SEMICOLON;}}
+{argument}          {col_yacc = column; line_yacc = yylineno; column+= yyleng; semi = 1; if (lflag) {fprintf(yyout, "ID(%s)\n", yytext);} else{yylval.tkn = strdup(yytext);return ID;}; }
 .                   {if (lflag) fprintf(yyout, "Line %d, column %d: illegal character (%s)\n", yylineno, column, yytext);semi=0; column += yyleng;}
 
 
 
+<STRLITERAL>\"                                   {column = temp + 2; temp = 1; BEGIN 0;}
 <STRLITERAL>{newline}                            {if (lflag) fprintf(yyout, "Line %d, column %d: unterminated string literal\n", yylineno-1, temp); semi=0; column=1; error=1; BEGIN 0;} 
 <STRLITERAL>\\                                   {if (lflag) fprintf(yyout, "Line %d, column %d: invalid escape sequence (\\)\n", yylineno, column); semi=0; column+=yyleng; error = 1;}
 <STRLITERAL>{escape}                             {column += yyleng;}
 <STRLITERAL>\\{escapeERROR}                      {if (lflag) fprintf(yyout, "Line %d, column %d: invalid escape sequence (%s)\n", yylineno, column, yytext); semi=0; column += yyleng; error=1;}
-<STRLITERAL>({escape}|{escapeERROR})*\"          {column += yyleng; semi = 1; if (lflag) {fprintf(yyout, "STRLIT(\"%s)\n",yytext);} else {yylval.tkn = strdup(yytext); return STRLIT;} BEGIN 0;}
+<STRLITERAL>({escape}|{escapeERROR})*\"          {col_yacc = column; line_yacc = yylineno; column+= yyleng; semi = 1; BEGIN 0; if (lflag) {fprintf(yyout, "STRLIT(\"%s)\n",yytext);} else{ char* str = malloc(yyleng+2); sprintf(str, "\"%s", yytext); yytext = str; yylval.tkn = str; return STRLIT;}}
 <STRLITERAL><<EOF>>                              {if (lflag) {fprintf(yyout, "Line %d, column %d: unterminated string literal\n", yylineno, temp);semi=0;column+=yyleng;} yyterminate();}
-<STRLITERAL>.                                    {column += yyleng;}
+<STRLITERAL>.                                    {column += yyleng ;}
  
 
 <COMMENT>"*/"      {column = temp + 2; temp = 1; BEGIN 0;}
-<COMMENT>{newline} {temp = 1;}
-<COMMENT><<EOF>>   {if (semi) {semi = 0; if (lflag)fprintf(yyout, "SEMICOLON\n");else return SEMICOLON;} fprintf(yyout, "Line %d, column %d: unterminated comment\n", line, column); yyterminate();}
-<COMMENT>.         {temp++;}
+<COMMENT>{newline} {temp = 1; col_yacc = column; line_yacc = yylineno-1; if (semi) {semi = 0; if (lflag)fprintf(yyout, "SEMICOLON\n");else return SEMICOLON;}}
+<COMMENT><<EOF>>   {fprintf(yyout, "Line %d, column %d: unterminated comment\n", line, column); yyterminate();}
+<COMMENT>.         {temp+= yyleng;}
  
 
 "//"                   {BEGIN LINECOMMENT;}
-<LINECOMMENT>{newline} {column = 1; line++; if (lflag && semi) fprintf(yyout, "SEMICOLON\n"); semi=0; BEGIN 0;}
+<LINECOMMENT>{newline} {col_yacc = column; line_yacc = yylineno-1; column = 1; line++; if (semi){ semi=0; if (lflag){fprintf(yyout, "SEMICOLON\n"); BEGIN 0;}} else return SEMICOLON;}
 <LINECOMMENT>.         {column += yyleng;}
 
 
-<<EOF>>                 {if (semi) {semi = 0; if (lflag) fprintf(yyout, "SEMICOLON\n"); else return SEMICOLON;} yyterminate();}
+<<EOF>>                 {col_yacc = column; line_yacc = yylineno; if (semi) {semi = 0; if (lflag) fprintf(yyout, "SEMICOLON\n"); else return SEMICOLON;} yyterminate();}
 
 
 %%
@@ -134,13 +136,15 @@ int main (int argc, char**argv){
     }
     else {
         yyparse();
+        if(erro == 0)
         print_tree(root,0);
     }
 
     return 0;
 }
 void yyerror(char* s){
-    printf("Line %d, column %d: %s %s\n", yylineno, column, s, yytext);
+    erro = 1;
+    printf("Line %d, column %d: %s: %s\n", line_yacc, col_yacc, s, yytext);
 }
 int yywrap() {
     return 1;

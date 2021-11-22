@@ -90,7 +90,8 @@ extern int yydebug;
     MOD = 296,
     NOT = 297,
     INTLIT = 298,
-    REALLIT = 299
+    REALLIT = 299,
+    RESERVED = 300
   };
 #endif
 /* Tokens.  */
@@ -136,17 +137,18 @@ extern int yydebug;
 #define NOT 297
 #define INTLIT 298
 #define REALLIT 299
+#define RESERVED 300
 
 /* Value type.  */
 #if ! defined YYSTYPE && ! defined YYSTYPE_IS_DECLARED
 union YYSTYPE
 {
-#line 13 "gocompiler.y"
+#line 18 "gocompiler.y"
 
-    char* tkn;
-       
+        char* tkn;
+        struct Node * node;
 
-#line 150 "y.tab.h"
+#line 152 "y.tab.h"
 
 };
 typedef union YYSTYPE YYSTYPE;

@@ -14,5 +14,6 @@ Node *create_node(char* token, char* value);
 Node *add_son(Node * parent, Node * son);
 Node *add_sibling(Node * someone, Node * sibling);
 void print_tree(Node* root, int numb);
+void save_type(Node* first, Node* type);
 
 #endif //STRUCT_H
