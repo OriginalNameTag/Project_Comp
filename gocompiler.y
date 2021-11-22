@@ -44,8 +44,8 @@ Program:
 ;
 
 Declarations:
-        Declarations VarDeclaration SEMICOLON           {if($1 == NULL){$$ = $2;} else {add_sibling($1,$2); $$ = $1;}}                            //done
-        | Declarations FuncDeclaration SEMICOLON        {if($1 == NULL){$$ = $2;} else {add_sibling($1,$2); $$ = $1;}}
+        Declarations VarDeclaration SEMICOLON           {if($1==NULL){$$ = $2;} else {add_sibling($1,$2); $$ = $1;}}                            //done
+        | Declarations FuncDeclaration SEMICOLON        {if($1==NULL){$$ = $2;} else {add_sibling($1,$2); $$ = $1;}}
         |                                               {$$ = NULL;}
 ;
 Type:
@@ -62,10 +62,10 @@ VarDeclaration:
 ;
 
 VarSpec:
-        ID VarSpecHelper Type                           {$$ = create_node("VarDecl", NULL);
+        ID VarSpecHelper Type                           {$$=create_node("VarDecl", NULL);
                                                         add_son($$, $3);
                                                         add_sibling($3, create_node("Id", $1));
-                                                        add_sibling($$, $2);
+                                                        add_sibling($$,$2);
                                                         save_type($$, $3);
                                                         } 
 ;
@@ -155,8 +155,8 @@ FuncBody:
         LBRACE VarsAndStatements RBRACE                 {$$ = $2;}
 ;
 VarsAndStatements:
-        VarsAndStatements VarDeclaration SEMICOLON      {if($1 != NULL){$$ = $1; add_sibling($$, $2);} else ($$ = $2);}
-        | VarsAndStatements Statement SEMICOLON         {if($1 != NULL){$$ = $1; add_sibling($$, $2);} else ($$ = $2);}
+        VarsAndStatements VarDeclaration SEMICOLON      {if($1!=NULL){$$ = $1; add_sibling($$, $2);} else ($$ = $2);}
+        | VarsAndStatements Statement SEMICOLON         {if($1!=NULL){$$ = $1; add_sibling($$, $2);} else ($$ = $2);}
         | VarsAndStatements SEMICOLON                   {$$ = $1;}
         |                                               {$$ = NULL;}
 ;
@@ -222,11 +222,11 @@ Statement:
 ;
 
 ExprHelper:
-        Expr                                            {$$ = $1;}
-        |                                               {$$ = NULL;}
+        Expr                                            {$$=$1;}
+        |                                               {$$=NULL;}
 
 PrintHelper:
-        Expr                                            {$$ = $1;}
+        Expr                                            {$$=$1;}
         |STRLIT                                         {$$ = create_node("StrLit", $1);}
 
 StatementHelper:
@@ -265,28 +265,28 @@ FuncInvocationHelper:
         |                                               {$$ = NULL;}
 ;
 Expr:
-        Expr OR Expr                                    {$$ = create_node("Or", NULL);  add_son($$, $1); add_son($$, $3);}                               //done
-        | Expr AND Expr                                 {$$ = create_node("And", NULL); add_son($$, $1); add_son($$, $3);}
-        | Expr LT Expr                                  {$$ = create_node("Lt", NULL);  add_son($$, $1); add_son($$, $3);}
-        | Expr GT Expr                                  {$$ = create_node("Gt", NULL);  add_son($$, $1); add_son($$, $3);}
-        | Expr EQ Expr                                  {$$ = create_node("Eq", NULL);  add_son($$, $1); add_son($$, $3);}
-        | Expr NE Expr                                  {$$ = create_node("Ne", NULL);  add_son($$, $1); add_son($$, $3);}
-        | Expr LE Expr                                  {$$ = create_node("Le", NULL);  add_son($$, $1); add_son($$, $3);}
-        | Expr GE Expr                                  {$$ = create_node("Ge", NULL);  add_son($$, $1); add_son($$, $3);}
-        | Expr PLUS Expr                                {$$ = create_node("Add", NULL); add_son($$, $1); add_son($$, $3);}
-        | Expr MINUS Expr                               {$$ = create_node("Sub", NULL); add_son($$, $1); add_son($$, $3);}
-        | Expr STAR Expr                                {$$ = create_node("Mul", NULL); add_son($$, $1); add_son($$, $3);}
-        | Expr DIV Expr                                 {$$ = create_node("Div", NULL); add_son($$, $1); add_son($$, $3);}
-        | Expr MOD Expr                                 {$$ = create_node("Mod", NULL); add_son($$, $1); add_son($$, $3);}
-        | NOT Expr                                      {$$ = create_node("Not", NULL); add_son($$, $2);}
-        | MINUS Expr                                    {$$ = create_node("Minus", NULL); add_son($$, $2);}
-        | PLUS Expr                                     {$$ = create_node("Plus", NULL);  add_son($$, $2);}
+        Expr OR Expr                                    {$$ = create_node("Or",NULL);  add_son($$, $1); add_son($$, $3);}                               //done
+        | Expr AND Expr                                 {$$ = create_node("And",NULL); add_son($$, $1); add_son($$, $3);}
+        | Expr LT Expr                                  {$$ = create_node("Lt",NULL);  add_son($$, $1); add_son($$, $3);}
+        | Expr GT Expr                                  {$$ = create_node("Gt",NULL);  add_son($$, $1); add_son($$, $3);}
+        | Expr EQ Expr                                  {$$ = create_node("Eq",NULL);  add_son($$, $1); add_son($$, $3);}
+        | Expr NE Expr                                  {$$ = create_node("Ne",NULL);  add_son($$, $1); add_son($$, $3);}
+        | Expr LE Expr                                  {$$ = create_node("Le",NULL);  add_son($$, $1); add_son($$, $3);}
+        | Expr GE Expr                                  {$$ = create_node("Ge",NULL);  add_son($$, $1); add_son($$, $3);}
+        | Expr PLUS Expr                                {$$ = create_node("Add",NULL); add_son($$, $1); add_son($$, $3);}
+        | Expr MINUS Expr                               {$$ = create_node("Sub",NULL); add_son($$, $1); add_son($$, $3);}
+        | Expr STAR Expr                                {$$ = create_node("Mul",NULL); add_son($$, $1); add_son($$, $3);}
+        | Expr DIV Expr                                 {$$ = create_node("Div",NULL); add_son($$, $1); add_son($$, $3);}
+        | Expr MOD Expr                                 {$$ = create_node("Mod",NULL); add_son($$, $1); add_son($$, $3);}
+        | NOT Expr                                      {$$ = create_node("Not",NULL); add_son($$, $2);}
+        | MINUS Expr                                    {$$ = create_node("Minus",NULL); add_son($$, $2);}
+        | PLUS Expr                                     {$$ = create_node("Plus",NULL);  add_son($$, $2);}
         | INTLIT                                        {$$ = create_node("IntLit", $1);}
         | REALLIT                                       {$$ = create_node("RealLit", $1);}
         | ID                                            {$$ = create_node("Id", $1);}
         | FuncInvocation                                {$$ = $1;}
         | LPAR Expr RPAR                                {$$ = $2;}
-        | LPAR error RPAR                               {$$ = NULL;}
+        | LPAR error RPAR                               {$$=NULL;}
 ;
 
 %%
