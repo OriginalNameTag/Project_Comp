@@ -83,7 +83,8 @@ VarSpecHelper:
 ;
 
 FuncDeclaration:
-        FUNC ID LPAR Parameters RPAR Type FuncBody      {$$ = create_node("FuncDecl", NULL);                                                 //done
+        FUNC ID LPAR Parameters RPAR Type FuncBody      {
+                                                        $$ = create_node("FuncDecl", NULL);                                                 //done
                                                         Node * header = create_node("FuncHeader", NULL);
                                                         add_son($$, header);
                                                         Node * id =  create_node("Id", $2);
@@ -94,9 +95,11 @@ FuncDeclaration:
                                                         add_son(parametros, $4);
                                                         Node * funcbody = create_node("FuncBody", NULL);
                                                         add_son(funcbody, $7);
-                                                        add_son($$, funcbody);}
+                                                        add_son($$, funcbody);
+                                                        }
 
-        | FUNC ID LPAR RPAR Type FuncBody               {$$ = create_node("FuncDecl", NULL);
+        | FUNC ID LPAR RPAR Type FuncBody               {
+                                                        $$ = create_node("FuncDecl", NULL);
                                                         Node * header = create_node("FuncHeader", NULL);
                                                         add_son($$, header);
                                                         Node * id =  create_node("Id", $2);
@@ -106,9 +109,11 @@ FuncDeclaration:
                                                         add_son(header,parametros);
                                                         Node * funcbody = create_node("FuncBody", NULL);
                                                         add_son(funcbody, $6);
-                                                        add_son($$, funcbody);}
+                                                        add_son($$, funcbody);
+                                                        }
 
-        | FUNC ID LPAR Parameters RPAR FuncBody         {$$ = create_node("FuncDecl", NULL);
+        | FUNC ID LPAR Parameters RPAR FuncBody         {
+                                                        $$ = create_node("FuncDecl", NULL);
                                                         Node * header= create_node("FuncHeader", NULL);
                                                         add_son($$, header);
                                                         Node * id =  create_node("Id", $2);
@@ -118,9 +123,12 @@ FuncDeclaration:
                                                         add_son(parametros, $4);
                                                         Node * funcbody = create_node("FuncBody", NULL);
                                                         add_son(funcbody, $6);
-                                                        add_son($$, funcbody);}
+                                                        add_son($$, funcbody);
+                                                        }
+                                                       
 
-        | FUNC ID LPAR RPAR FuncBody                    {$$ = create_node("FuncDecl", NULL);
+        | FUNC ID LPAR RPAR FuncBody                    {
+                                                        $$ = create_node("FuncDecl", NULL);
                                                         Node * header= create_node("FuncHeader", NULL);
                                                         add_son($$, header);
                                                         Node * id =  create_node("Id", $2);
@@ -133,14 +141,16 @@ FuncDeclaration:
                                                         }
 ;
 Parameters:
-        ID Type ParametersHelper                        {$$ = create_node("ParamDecl", NULL);
+        ID Type ParametersHelper                        {
+                                                        $$ = create_node("ParamDecl", NULL);
                                                         add_sibling($$, $3);
                                                         add_son($$, $2);
                                                         add_son($$, create_node("Id", $1));
                                                         }
 ;       
 ParametersHelper:
-        ParametersHelper COMMA ID Type                  {Node* param = create_node("ParamDecl", NULL);
+        ParametersHelper COMMA ID Type                  {
+                                                        Node* param = create_node("ParamDecl", NULL);
                                                         add_son(param, $4);
                                                         add_son(param, create_node("Id", $3));                                          
                                                         if ($1 == NULL) $$ = param;
@@ -160,7 +170,6 @@ VarsAndStatements:
         | VarsAndStatements SEMICOLON                   {$$ = $1;}
         |                                               {$$ = NULL;}
 ;
-
 
 Statement:
          error                                          {$$=NULL;}
@@ -215,20 +224,20 @@ Statement:
 
         | ParseArgs                                     {$$ = $1;}
                                                         
-        | PRINT LPAR PrintHelper RPAR                   {$$ =  create_node("Print", NULL);
+        | PRINT LPAR PrintHelper RPAR                   {
+                                                        $$ =  create_node("Print", NULL);
                                                         add_son($$,$3);
                                                         }
         
 ;
-
 ExprHelper:
         Expr                                            {$$ = $1;}
         |                                               {$$ = NULL;}
-
+;
 PrintHelper:
         Expr                                            {$$ = $1;}
         |STRLIT                                         {$$ = create_node("StrLit", $1);}
-
+;
 StatementHelper:
         StatementHelper Statement SEMICOLON             {
                                                         if($1 == NULL) $$ = $2;
@@ -238,7 +247,6 @@ StatementHelper:
                                                         }
         |                                               {$$ = NULL;}
 ;
-
 ParseArgs:
         ID COMMA BLANKID ASSIGN PARSEINT LPAR CMDARGS LSQ Expr RSQ RPAR         {$$ = create_node("ParseArgs", NULL);
                                                                                 add_son($$, create_node("Id", $1));
