@@ -41,7 +41,7 @@ escapeERROR     [^\n\r\"\\]
 %option yylineno
 %x COMMENT LINECOMMENT STRLITERAL
 %%
-\"                  {temp = column ; column += yyleng; error = 0;BEGIN STRLITERAL;}
+\"                  {temp = column; col_yacc= column; column += yyleng; error = 0;BEGIN STRLITERAL;}
 "/*"                {temp = column + 2; line = yylineno; BEGIN COMMENT;}
 
 ";"                 {col_yacc = column; line_yacc = yylineno; column+= yyleng; semi = 0; if (lflag) {fprintf(yyout, "SEMICOLON\n");} else return SEMICOLON;}
@@ -82,7 +82,7 @@ escapeERROR     [^\n\r\"\\]
 "strconv.Atoi"      {col_yacc = column; line_yacc = yylineno; column+= yyleng; semi = 0; if (lflag) {fprintf(yyout, "PARSEINT\n");} else return PARSEINT;}
 "func"              {col_yacc = column; line_yacc = yylineno; column+= yyleng; semi = 0; if (lflag) {fprintf(yyout, "FUNC\n");} else return FUNC;}
 "os.Args"           {col_yacc = column; line_yacc = yylineno; column+= yyleng; semi = 0; if (lflag) {fprintf(yyout, "CMDARGS\n");} else return CMDARGS;}
-"\t"|" "            {column++;}
+"\t"|" "            {column++;col_yacc = column;}
 
 
 {hexadecimal}       {col_yacc = column; line_yacc = yylineno; column+= yyleng; semi = 1; if (lflag) {fprintf(yyout, "INTLIT(%s)\n", yytext);} else {yylval.tkn = strdup(yytext); return INTLIT;}}
@@ -101,7 +101,7 @@ escapeERROR     [^\n\r\"\\]
 <STRLITERAL>{newline}                            {if (lflag) fprintf(yyout, "Line %d, column %d: unterminated string literal\n", yylineno-1, temp); semi=0; column=1; error=1; BEGIN 0;} 
 <STRLITERAL>\\                                   {if (lflag) fprintf(yyout, "Line %d, column %d: invalid escape sequence (\\)\n", yylineno, column); semi=0; column+=yyleng; error = 1;}
 <STRLITERAL>{escape}                             {column += yyleng;}
-<STRLITERAL>\\{escapeERROR}                      {if (lflag) fprintf(yyout, "Line %d, column %d: invalid escape sequence (%s)\n", yylineno, column, yytext); semi=0; column += yyleng; error=1;}
+<STRLITERAL>\\{escapeERROR}                      {fprintf(yyout, "Line %d, column %d: invalid escape sequence (%s)\n", yylineno, column, yytext); semi=0; column += yyleng; error=1;}
 <STRLITERAL>({escape}|{escapeERROR})*\"          {col_yacc = column; line_yacc = yylineno; column+= yyleng; semi = 1; BEGIN 0; if (lflag) {fprintf(yyout, "STRLIT(\"%s)\n",yytext);} else{ char* str = malloc(yyleng+2); sprintf(str, "\"%s", yytext); yytext = str; yylval.tkn = str; return STRLIT;}}
 <STRLITERAL><<EOF>>                              {if (lflag) {fprintf(yyout, "Line %d, column %d: unterminated string literal\n", yylineno, temp);semi=0;column+=yyleng;} yyterminate();}
 <STRLITERAL>.                                    {column += yyleng ;}
@@ -114,7 +114,7 @@ escapeERROR     [^\n\r\"\\]
  
 
 "//"                   {BEGIN LINECOMMENT;}
-<LINECOMMENT>{newline} {col_yacc = column; line_yacc = yylineno-1; column = 1; line++; if (semi){ semi=0; if (lflag){fprintf(yyout, "SEMICOLON\n"); BEGIN 0;}} else return SEMICOLON;}
+<LINECOMMENT>{newline} {col_yacc = column; line_yacc = yylineno-1; column = 1; line++;BEGIN 0; if (semi){ semi=0; if (lflag){fprintf(yyout, "SEMICOLON\n");} else return SEMICOLON;}}
 <LINECOMMENT>.         {column += yyleng;}
 
 
