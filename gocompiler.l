@@ -41,7 +41,7 @@ escapeERROR     [^\n\r\"\\]
 %option yylineno
 %x COMMENT LINECOMMENT STRLITERAL
 %%
-\"                  {temp = column; col_yacc= column; column += yyleng; error = 0;BEGIN STRLITERAL;}
+\"                  {temp = column; col_yacc = column; column += yyleng; error = 0;BEGIN STRLITERAL;}
 "/*"                {temp = column + 2; line = yylineno; BEGIN COMMENT;}
 
 ";"                 {col_yacc = column; line_yacc = yylineno; column+= yyleng; semi = 0; if (lflag) {fprintf(yyout, "SEMICOLON\n");} else return SEMICOLON;}
@@ -93,22 +93,22 @@ escapeERROR     [^\n\r\"\\]
 {reserved}          {col_yacc = column; line_yacc = yylineno; column+= yyleng; semi = 0; if (lflag) {fprintf(yyout, "RESERVED(%s)\n", yytext);} else return RESERVED;}
 {newline}           {col_yacc = column; line_yacc = yylineno-1; column = 1; if (semi)  {semi = 0; if (lflag) {fprintf(yyout, "SEMICOLON\n");} else return SEMICOLON;}}
 {argument}          {col_yacc = column; line_yacc = yylineno; column+= yyleng; semi = 1; if (lflag) {fprintf(yyout, "ID(%s)\n", yytext);} else{yylval.tkn = strdup(yytext);return ID;}; }
-.                   {if (lflag) fprintf(yyout, "Line %d, column %d: illegal character (%s)\n", yylineno, column, yytext);semi=0; column += yyleng;}
+.                   {if (lflag) {fprintf(yyout, "Line %d, column %d: illegal character (%s)\n", yylineno, column, yytext);}semi=0; column += yyleng;}
 
 
 
-<STRLITERAL>\"                                   {column = temp + 2; temp = 1; BEGIN 0;}
-<STRLITERAL>{newline}                            {if (lflag) fprintf(yyout, "Line %d, column %d: unterminated string literal\n", yylineno-1, temp); semi=0; column=1; error=1; BEGIN 0;} 
-<STRLITERAL>\\                                   {if (lflag) fprintf(yyout, "Line %d, column %d: invalid escape sequence (\\)\n", yylineno, column); semi=0; column+=yyleng; error = 1;}
-<STRLITERAL>{escape}                             {column += yyleng;}
-<STRLITERAL>\\{escapeERROR}                      {fprintf(yyout, "Line %d, column %d: invalid escape sequence (%s)\n", yylineno, column, yytext); semi=0; column += yyleng; error=1;}
-<STRLITERAL>({escape}|{escapeERROR})*\"          {col_yacc = column; line_yacc = yylineno; column+= yyleng; semi = 1; BEGIN 0; if (lflag) {fprintf(yyout, "STRLIT(\"%s)\n",yytext);} else{ char* str = malloc(yyleng+2); sprintf(str, "\"%s", yytext); yytext = str; yylval.tkn = str; return STRLIT;}}
-<STRLITERAL><<EOF>>                              {if (lflag) {fprintf(yyout, "Line %d, column %d: unterminated string literal\n", yylineno, temp);semi=0;column+=yyleng;} yyterminate();}
-<STRLITERAL>.                                    {column += yyleng ;}
+<STRLITERAL>\"                                   {column = temp + 2; col_yacc = column + 2;temp = 1; BEGIN 0;}
+<STRLITERAL>{newline}                            {col_yacc = temp; semi=0; column=1; error=1; BEGIN 0; fprintf(yyout, "Line %d, column %d: unterminated string literal\n", yylineno-1, temp); } 
+<STRLITERAL>\\                                   {semi=0; column+=yyleng; col_yacc = column; error = 1; fprintf(yyout, "Line %d, column %d: invalid escape sequence (\\)\n", yylineno, column); }
+<STRLITERAL>{escape}                             {column += yyleng; col_yacc = column;}
+<STRLITERAL>\\{escapeERROR}                      {fprintf(yyout, "Line %d, column %d: invalid escape sequence (%s)\n", yylineno, column, yytext); semi=0; column += yyleng; error=1; col_yacc = column + 2;}
+<STRLITERAL>({escape}|{escapeERROR})*\"          {line_yacc = yylineno; column+= yyleng; semi = 1; BEGIN 0; if (lflag) {fprintf(yyout, "STRLIT(\"%s)\n",yytext);} else{ char* str = malloc(yyleng+2); sprintf(str, "\"%s", yytext); yytext = str; yylval.tkn = str; return STRLIT;}}
+<STRLITERAL><<EOF>>                              {semi=0;column+=yyleng; col_yacc = column; fprintf(yyout, "Line %d, column %d: unterminated string literal\n", yylineno, column); yyterminate();}
+<STRLITERAL>.                                    {column += yyleng;col_yacc = column;}
  
 
-<COMMENT>"*/"      {column = temp + 2; temp = 1; BEGIN 0;}
-<COMMENT>{newline} {temp = 1; col_yacc = column; line_yacc = yylineno-1; if (semi) {semi = 0; if (lflag)fprintf(yyout, "SEMICOLON\n");else return SEMICOLON;}}
+<COMMENT>"*/"      {column = temp + 2; temp = 1; BEGIN 0; col_yacc = column;}
+<COMMENT>{newline} {temp = 1; col_yacc = 1; line_yacc = yylineno-1; if (semi) {semi = 0; if (lflag)fprintf(yyout, "SEMICOLON\n");else return SEMICOLON;}}
 <COMMENT><<EOF>>   {fprintf(yyout, "Line %d, column %d: unterminated comment\n", line, column); yyterminate();}
 <COMMENT>.         {temp+= yyleng;}
  
@@ -118,7 +118,7 @@ escapeERROR     [^\n\r\"\\]
 <LINECOMMENT>.         {column += yyleng;}
 
 
-<<EOF>>                 {col_yacc = column; line_yacc = yylineno; if (semi) {semi = 0; if (lflag) fprintf(yyout, "SEMICOLON\n"); else return SEMICOLON;} yyterminate();}
+<<EOF>>                 {col_yacc = column ; line_yacc = yylineno; if (semi) {semi = 0; if (lflag) fprintf(yyout, "SEMICOLON\n"); else return SEMICOLON;} yyterminate();}
 
 
 %%

@@ -25,13 +25,13 @@
 %token <tkn> RESERVED
 
 %left COMMA
-%right ASSIGN
+%right ASSIGN 
 %left OR
 %left AND
 %left EQ NE GE GT LE LT
 %left PLUS MINUS
 %left STAR DIV MOD
-%nonassoc NOT
+%right NOT UNARY   
 %nonassoc LPAR
 %nonassoc RPAR
 
@@ -269,21 +269,21 @@ FuncInvocationHelper:
 ;
 Expr:
         Expr OR Expr                                    {$$ = create_node("Or",NULL);  add_son($$, $1); add_son($$, $3);}                               //done
-        | Expr AND Expr                                 {$$ = create_node("And",NULL); add_son($$, $1); add_son($$, $3);}
-        | Expr LT Expr                                  {$$ = create_node("Lt",NULL);  add_son($$, $1); add_son($$, $3);}
-        | Expr GT Expr                                  {$$ = create_node("Gt",NULL);  add_son($$, $1); add_son($$, $3);}
-        | Expr EQ Expr                                  {$$ = create_node("Eq",NULL);  add_son($$, $1); add_son($$, $3);}
-        | Expr NE Expr                                  {$$ = create_node("Ne",NULL);  add_son($$, $1); add_son($$, $3);}
-        | Expr LE Expr                                  {$$ = create_node("Le",NULL);  add_son($$, $1); add_son($$, $3);}
-        | Expr GE Expr                                  {$$ = create_node("Ge",NULL);  add_son($$, $1); add_son($$, $3);}
-        | Expr PLUS Expr                                {$$ = create_node("Add",NULL); add_son($$, $1); add_son($$, $3);}
+        | Expr AND   Expr                               {$$ = create_node("And",NULL); add_son($$, $1); add_son($$, $3);}
+        | Expr LT    Expr                               {$$ = create_node("Lt",NULL);  add_son($$, $1); add_son($$, $3);}
+        | Expr GT    Expr                               {$$ = create_node("Gt",NULL);  add_son($$, $1); add_son($$, $3);}
+        | Expr EQ    Expr                               {$$ = create_node("Eq",NULL);  add_son($$, $1); add_son($$, $3);}
+        | Expr NE    Expr                               {$$ = create_node("Ne",NULL);  add_son($$, $1); add_son($$, $3);}
+        | Expr LE    Expr                               {$$ = create_node("Le",NULL);  add_son($$, $1); add_son($$, $3);}
+        | Expr GE    Expr                               {$$ = create_node("Ge",NULL);  add_son($$, $1); add_son($$, $3);}
+        | Expr PLUS  Expr                               {$$ = create_node("Add",NULL); add_son($$, $1); add_son($$, $3);}
         | Expr MINUS Expr                               {$$ = create_node("Sub",NULL); add_son($$, $1); add_son($$, $3);}
-        | Expr STAR Expr                                {$$ = create_node("Mul",NULL); add_son($$, $1); add_son($$, $3);}
-        | Expr DIV Expr                                 {$$ = create_node("Div",NULL); add_son($$, $1); add_son($$, $3);}
-        | Expr MOD Expr                                 {$$ = create_node("Mod",NULL); add_son($$, $1); add_son($$, $3);}
-        | NOT Expr                                      {$$ = create_node("Not",NULL); add_son($$, $2);}
-        | MINUS Expr                                    {$$ = create_node("Minus",NULL); add_son($$, $2);}
-        | PLUS Expr                                     {$$ = create_node("Plus",NULL);  add_son($$, $2);}
+        | Expr STAR  Expr                               {$$ = create_node("Mul",NULL); add_son($$, $1); add_son($$, $3);}
+        | Expr DIV   Expr                               {$$ = create_node("Div",NULL); add_son($$, $1); add_son($$, $3);}
+        | Expr MOD   Expr                               {$$ = create_node("Mod",NULL); add_son($$, $1); add_son($$, $3);}
+        | NOT Expr    %prec UNARY                       {$$ = create_node("Not",NULL); add_son($$, $2);}
+        | MINUS Expr  %prec UNARY                       {$$ = create_node("Minus",NULL); add_son($$, $2);}
+        | PLUS Expr   %prec UNARY                       {$$ = create_node("Plus",NULL);  add_son($$, $2);}
         | INTLIT                                        {$$ = create_node("IntLit", $1);}
         | REALLIT                                       {$$ = create_node("RealLit", $1);}
         | ID                                            {$$ = create_node("Id", $1);}
