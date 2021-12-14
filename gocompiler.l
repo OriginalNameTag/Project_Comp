@@ -5,9 +5,12 @@
     #include <string.h>
     #include "y.tab.h"
     #include "struct.h"
+    #include "symtab.h"
+    #include "semantics.h"
 
     int lflag = 0; 
     int tflag = 0;
+    int sflag = 0;
     int column =  1;
     int line = 1;
     int semi=0;
@@ -17,6 +20,7 @@
     int col_yacc = 1, line_yacc = 1;
     int yydebug=1;
     int erro = 0;
+    symtab* global;
 
 %}
 letter          [A-Za-z]
@@ -129,15 +133,22 @@ int main (int argc, char**argv){
         }
         else if(strcmp(argv[i], "-t") == 0){
             tflag = 1;
-        }   
+        } 
+        else if(strcmp(argv[i], "-s") == 0){
+            sflag = 1;
+        }  
     }
     if(lflag){
         yylex();
     }
     else {
         yyparse();
-        if(erro == 0)
+        if(erro == 0 && tflag){
         print_tree(root,0);
+        }
+        else if (sflag){
+            show_table(global);
+        }
     }
 
     return 0;
