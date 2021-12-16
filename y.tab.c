@@ -173,7 +173,8 @@ extern int yydebug;
     NOT = 297,
     INTLIT = 298,
     REALLIT = 299,
-    RESERVED = 300
+    RESERVED = 300,
+    UNARY = 301
   };
 #endif
 /* Tokens.  */
@@ -220,6 +221,7 @@ extern int yydebug;
 #define INTLIT 298
 #define REALLIT 299
 #define RESERVED 300
+#define UNARY 301
 
 /* Value type.  */
 #if ! defined YYSTYPE && ! defined YYSTYPE_IS_DECLARED
@@ -230,7 +232,7 @@ union YYSTYPE
         char* tkn;
         struct Node * node;
 
-#line 234 "y.tab.c"
+#line 236 "y.tab.c"
 
 };
 typedef union YYSTYPE YYSTYPE;
@@ -552,7 +554,7 @@ union yyalloc
 #define YYLAST   323
 
 /* YYNTOKENS -- Number of terminals.  */
-#define YYNTOKENS  46
+#define YYNTOKENS  47
 /* YYNNTS -- Number of nonterminals.  */
 #define YYNNTS  20
 /* YYNRULES -- Number of rules.  */
@@ -561,7 +563,7 @@ union yyalloc
 #define YYNSTATES  152
 
 #define YYUNDEFTOK  2
-#define YYMAXUTOK   300
+#define YYMAXUTOK   301
 
 
 /* YYTRANSLATE(TOKEN-NUM) -- Symbol number corresponding to TOKEN-NUM
@@ -603,7 +605,7 @@ static const yytype_int8 yytranslate[] =
       15,    16,    17,    18,    19,    20,    21,    22,    23,    24,
       25,    26,    27,    28,    29,    30,    31,    32,    33,    34,
       35,    36,    37,    38,    39,    40,    41,    42,    43,    44,
-      45
+      45,    46
 };
 
 #if YYDEBUG
@@ -611,13 +613,13 @@ static const yytype_int8 yytranslate[] =
 static const yytype_int16 yyrline[] =
 {
        0,    41,    41,    47,    48,    49,    52,    53,    54,    55,
-      60,    61,    65,    73,    82,    86,   101,   115,   130,   144,
-     152,   162,   165,   168,   169,   170,   171,   175,   176,   181,
-     186,   195,   205,   212,   218,   223,   225,   227,   234,   235,
-     238,   239,   242,   248,   251,   255,   258,   263,   265,   268,
-     273,   276,   277,   278,   279,   280,   281,   282,   283,   284,
-     285,   286,   287,   288,   289,   290,   291,   292,   293,   294,
-     295,   296,   297
+      60,    61,    65,    73,    82,    86,    99,   111,   123,   136,
+     143,   152,   155,   158,   159,   160,   161,   166,   167,   172,
+     180,   189,   199,   206,   212,   217,   219,   221,   228,   229,
+     232,   233,   236,   242,   246,   250,   253,   258,   260,   263,
+     268,   271,   272,   273,   274,   275,   276,   277,   278,   279,
+     280,   281,   282,   283,   284,   285,   286,   287,   288,   289,
+     290,   291,   292
 };
 #endif
 
@@ -631,12 +633,12 @@ static const char *const yytname[] =
   "LBRACE", "RBRACE", "ASSIGN", "IF", "ELSE", "FOR", "RETURN", "PRINT",
   "STRLIT", "BLANKID", "PARSEINT", "CMDARGS", "LSQ", "RSQ", "OR", "AND",
   "LT", "GT", "EQ", "NE", "LE", "GE", "PLUS", "MINUS", "STAR", "DIV",
-  "MOD", "NOT", "INTLIT", "REALLIT", "RESERVED", "$accept", "Program",
-  "Declarations", "Type", "VarDeclaration", "VarSpec", "VarSpecHelper",
-  "FuncDeclaration", "Parameters", "ParametersHelper", "FuncBody",
-  "VarsAndStatements", "Statement", "ExprHelper", "PrintHelper",
-  "StatementHelper", "ParseArgs", "FuncInvocation", "FuncInvocationHelper",
-  "Expr", YY_NULLPTR
+  "MOD", "NOT", "INTLIT", "REALLIT", "RESERVED", "UNARY", "$accept",
+  "Program", "Declarations", "Type", "VarDeclaration", "VarSpec",
+  "VarSpecHelper", "FuncDeclaration", "Parameters", "ParametersHelper",
+  "FuncBody", "VarsAndStatements", "Statement", "ExprHelper",
+  "PrintHelper", "StatementHelper", "ParseArgs", "FuncInvocation",
+  "FuncInvocationHelper", "Expr", YY_NULLPTR
 };
 #endif
 
@@ -649,7 +651,7 @@ static const yytype_int16 yytoknum[] =
      265,   266,   267,   268,   269,   270,   271,   272,   273,   274,
      275,   276,   277,   278,   279,   280,   281,   282,   283,   284,
      285,   286,   287,   288,   289,   290,   291,   292,   293,   294,
-     295,   296,   297,   298,   299,   300
+     295,   296,   297,   298,   299,   300,   301
 };
 # endif
 
@@ -675,7 +677,7 @@ static const yytype_int16 yypact[] =
       90,    77,    85,    86,   -68,   -68,   -68,    89,    21,    88,
       90,   195,    98,    65,    90,    90,    90,   -68,   -68,   -68,
      133,   -68,   146,   -68,   263,    81,   -68,   -68,   -68,   105,
-     -68,   263,   103,   263,   -68,    91,   113,   106,   282,   282,
+     -68,   263,   103,   263,   -68,    91,   113,   106,   -68,   -68,
      -68,   -68,    90,    90,    90,    90,    90,    90,    90,    90,
       90,    90,    90,    90,    90,   217,   -68,   -68,   114,   263,
      -68,    54,   101,   -68,   -68,   -68,   225,   119,   274,   279,
@@ -803,35 +805,35 @@ static const yytype_int16 yycheck[] =
      symbol of state STATE-NUM.  */
 static const yytype_int8 yystos[] =
 {
-       0,     3,    47,     4,     0,     5,    48,     6,    13,    50,
-      53,     4,     7,    51,     4,     5,     5,    52,    51,     7,
-       9,    10,    11,    12,    14,    49,     5,     4,     8,    54,
-       4,     8,    49,    15,    49,    56,     8,    55,    57,    56,
-      49,    56,    14,     1,     4,     5,    15,    16,    18,    20,
-      21,    22,    50,    58,    62,    63,    56,     4,     7,    14,
-      17,    61,     4,     7,    37,    38,    42,    43,    44,    63,
-      65,    15,    65,    59,    65,     7,     5,     5,    49,     1,
-       8,    65,    24,    65,    16,    58,     1,    65,    65,    65,
-      65,    15,    29,    30,    31,    32,    33,    34,    35,    36,
-      37,    38,    39,    40,    41,    61,    15,    23,    60,    65,
-       8,    64,    17,     5,     8,     8,    61,    65,    65,    65,
-      65,    65,    65,    65,    65,    65,    65,    65,    65,    65,
-      16,    61,     8,     8,    14,    25,    16,    16,    65,     7,
-      19,    26,    15,    27,    61,     1,    65,    16,    28,    28,
+       0,     3,    48,     4,     0,     5,    49,     6,    13,    51,
+      54,     4,     7,    52,     4,     5,     5,    53,    52,     7,
+       9,    10,    11,    12,    14,    50,     5,     4,     8,    55,
+       4,     8,    50,    15,    50,    57,     8,    56,    58,    57,
+      50,    57,    14,     1,     4,     5,    15,    16,    18,    20,
+      21,    22,    51,    59,    63,    64,    57,     4,     7,    14,
+      17,    62,     4,     7,    37,    38,    42,    43,    44,    64,
+      66,    15,    66,    60,    66,     7,     5,     5,    50,     1,
+       8,    66,    24,    66,    16,    59,     1,    66,    66,    66,
+      66,    15,    29,    30,    31,    32,    33,    34,    35,    36,
+      37,    38,    39,    40,    41,    62,    15,    23,    61,    66,
+       8,    65,    17,     5,     8,     8,    62,    66,    66,    66,
+      66,    66,    66,    66,    66,    66,    66,    66,    66,    66,
+      16,    62,     8,     8,    14,    25,    16,    16,    66,     7,
+      19,    26,    15,    27,    62,     1,    66,    16,    28,    28,
        8,     8
 };
 
   /* YYR1[YYN] -- Symbol number of symbol that rule YYN derives.  */
 static const yytype_int8 yyr1[] =
 {
-       0,    46,    47,    48,    48,    48,    49,    49,    49,    49,
-      50,    50,    51,    52,    52,    53,    53,    53,    53,    54,
-      55,    55,    56,    57,    57,    57,    57,    58,    58,    58,
-      58,    58,    58,    58,    58,    58,    58,    58,    59,    59,
-      60,    60,    61,    61,    62,    62,    63,    63,    63,    64,
-      64,    65,    65,    65,    65,    65,    65,    65,    65,    65,
-      65,    65,    65,    65,    65,    65,    65,    65,    65,    65,
-      65,    65,    65
+       0,    47,    48,    49,    49,    49,    50,    50,    50,    50,
+      51,    51,    52,    53,    53,    54,    54,    54,    54,    55,
+      56,    56,    57,    58,    58,    58,    58,    59,    59,    59,
+      59,    59,    59,    59,    59,    59,    59,    59,    60,    60,
+      61,    61,    62,    62,    63,    63,    64,    64,    64,    65,
+      65,    66,    66,    66,    66,    66,    66,    66,    66,    66,
+      66,    66,    66,    66,    66,    66,    66,    66,    66,    66,
+      66,    66,    66
 };
 
   /* YYR2[YYN] -- Number of symbols on the right hand side of rule YYN.  */
@@ -1544,72 +1546,72 @@ yyreduce:
                                                         {(yyval.node) = root = create_node("Program", NULL); if((yyvsp[0].node)!=NULL) add_son(root, (yyvsp[0].node));                           //done
                                                         //printf("root was created\n");
                                                         }
-#line 1548 "y.tab.c"
+#line 1550 "y.tab.c"
     break;
 
   case 3:
 #line 47 "gocompiler.y"
-                                                        {if((yyvsp[-2].node) == NULL){(yyval.node) = (yyvsp[-1].node);} else {add_sibling((yyvsp[-2].node),(yyvsp[-1].node)); (yyval.node) = (yyvsp[-2].node);}}
-#line 1554 "y.tab.c"
+                                                        {if((yyvsp[-2].node)==NULL){(yyval.node) = (yyvsp[-1].node);} else {add_sibling((yyvsp[-2].node),(yyvsp[-1].node)); (yyval.node) = (yyvsp[-2].node);}}
+#line 1556 "y.tab.c"
     break;
 
   case 4:
 #line 48 "gocompiler.y"
-                                                        {if((yyvsp[-2].node) == NULL){(yyval.node) = (yyvsp[-1].node);} else {add_sibling((yyvsp[-2].node),(yyvsp[-1].node)); (yyval.node) = (yyvsp[-2].node);}}
-#line 1560 "y.tab.c"
+                                                        {if((yyvsp[-2].node)==NULL){(yyval.node) = (yyvsp[-1].node);} else {add_sibling((yyvsp[-2].node),(yyvsp[-1].node)); (yyval.node) = (yyvsp[-2].node);}}
+#line 1562 "y.tab.c"
     break;
 
   case 5:
 #line 49 "gocompiler.y"
                                                         {(yyval.node) = NULL;}
-#line 1566 "y.tab.c"
+#line 1568 "y.tab.c"
     break;
 
   case 6:
 #line 52 "gocompiler.y"
                                                         {(yyval.node) = create_node("Int", NULL);}
-#line 1572 "y.tab.c"
+#line 1574 "y.tab.c"
     break;
 
   case 7:
 #line 53 "gocompiler.y"
                                                         {(yyval.node) = create_node("Float32", NULL);}
-#line 1578 "y.tab.c"
+#line 1580 "y.tab.c"
     break;
 
   case 8:
 #line 54 "gocompiler.y"
                                                         {(yyval.node) = create_node("Bool", NULL);}
-#line 1584 "y.tab.c"
+#line 1586 "y.tab.c"
     break;
 
   case 9:
 #line 55 "gocompiler.y"
                                                         {(yyval.node) = create_node("String", NULL);}
-#line 1590 "y.tab.c"
+#line 1592 "y.tab.c"
     break;
 
   case 10:
 #line 60 "gocompiler.y"
                                                         {(yyval.node) = (yyvsp[0].node);}
-#line 1596 "y.tab.c"
+#line 1598 "y.tab.c"
     break;
 
   case 11:
 #line 61 "gocompiler.y"
                                                         {(yyval.node) = (yyvsp[-2].node);}
-#line 1602 "y.tab.c"
+#line 1604 "y.tab.c"
     break;
 
   case 12:
 #line 65 "gocompiler.y"
-                                                        {(yyval.node) = create_node("VarDecl", NULL);
+                                                        {(yyval.node)=create_node("VarDecl", NULL);
                                                         add_son((yyval.node), (yyvsp[0].node));
                                                         add_sibling((yyvsp[0].node), create_node("Id", (yyvsp[-2].tkn)));
-                                                        add_sibling((yyval.node), (yyvsp[-1].node));
+                                                        add_sibling((yyval.node),(yyvsp[-1].node));
                                                         save_type((yyval.node), (yyvsp[0].node));
                                                         }
-#line 1613 "y.tab.c"
+#line 1615 "y.tab.c"
     break;
 
   case 13:
@@ -1621,19 +1623,18 @@ yyreduce:
                                                                 add_sibling((yyval.node),var);
                                                         } else (yyval.node) = var;
                                                         }
-#line 1625 "y.tab.c"
+#line 1627 "y.tab.c"
     break;
 
   case 14:
 #line 82 "gocompiler.y"
                                                         {(yyval.node) = NULL;}
-#line 1631 "y.tab.c"
+#line 1633 "y.tab.c"
     break;
 
   case 15:
 #line 86 "gocompiler.y"
-                                                        {
-                                                        (yyval.node) = create_node("FuncDecl", NULL);                                                 //done
+                                                        {(yyval.node) = create_node("FuncDecl", NULL);                                                 //done
                                                         Node * header = create_node("FuncHeader", NULL);
                                                         add_son((yyval.node), header);
                                                         Node * id =  create_node("Id", (yyvsp[-5].tkn));
@@ -1644,15 +1645,13 @@ yyreduce:
                                                         add_son(parametros, (yyvsp[-3].node));
                                                         Node * funcbody = create_node("FuncBody", NULL);
                                                         add_son(funcbody, (yyvsp[0].node));
-                                                        add_son((yyval.node), funcbody);
-                                                        }
+                                                        add_son((yyval.node), funcbody);}
 #line 1650 "y.tab.c"
     break;
 
   case 16:
-#line 101 "gocompiler.y"
-                                                        {
-                                                        (yyval.node) = create_node("FuncDecl", NULL);
+#line 99 "gocompiler.y"
+                                                        {(yyval.node) = create_node("FuncDecl", NULL);
                                                         Node * header = create_node("FuncHeader", NULL);
                                                         add_son((yyval.node), header);
                                                         Node * id =  create_node("Id", (yyvsp[-4].tkn));
@@ -1662,15 +1661,13 @@ yyreduce:
                                                         add_son(header,parametros);
                                                         Node * funcbody = create_node("FuncBody", NULL);
                                                         add_son(funcbody, (yyvsp[0].node));
-                                                        add_son((yyval.node), funcbody);
-                                                        }
-#line 1668 "y.tab.c"
+                                                        add_son((yyval.node), funcbody);}
+#line 1666 "y.tab.c"
     break;
 
   case 17:
-#line 115 "gocompiler.y"
-                                                        {
-                                                        (yyval.node) = create_node("FuncDecl", NULL);
+#line 111 "gocompiler.y"
+                                                        {(yyval.node) = create_node("FuncDecl", NULL);
                                                         Node * header= create_node("FuncHeader", NULL);
                                                         add_son((yyval.node), header);
                                                         Node * id =  create_node("Id", (yyvsp[-4].tkn));
@@ -1680,15 +1677,13 @@ yyreduce:
                                                         add_son(parametros, (yyvsp[-2].node));
                                                         Node * funcbody = create_node("FuncBody", NULL);
                                                         add_son(funcbody, (yyvsp[0].node));
-                                                        add_son((yyval.node), funcbody);
-                                                        }
-#line 1686 "y.tab.c"
+                                                        add_son((yyval.node), funcbody);}
+#line 1682 "y.tab.c"
     break;
 
   case 18:
-#line 130 "gocompiler.y"
-                                                        {
-                                                        (yyval.node) = create_node("FuncDecl", NULL);
+#line 123 "gocompiler.y"
+                                                        {(yyval.node) = create_node("FuncDecl", NULL);
                                                         Node * header= create_node("FuncHeader", NULL);
                                                         add_son((yyval.node), header);
                                                         Node * id =  create_node("Id", (yyvsp[-3].tkn));
@@ -1699,24 +1694,22 @@ yyreduce:
                                                         add_son(funcbody, (yyvsp[0].node));
                                                         add_son((yyval.node), funcbody);
                                                         }
-#line 1703 "y.tab.c"
+#line 1698 "y.tab.c"
     break;
 
   case 19:
-#line 144 "gocompiler.y"
-                                                        {
-                                                        (yyval.node) = create_node("ParamDecl", NULL);
+#line 136 "gocompiler.y"
+                                                        {(yyval.node) = create_node("ParamDecl", NULL);
                                                         add_sibling((yyval.node), (yyvsp[0].node));
                                                         add_son((yyval.node), (yyvsp[-1].node));
                                                         add_son((yyval.node), create_node("Id", (yyvsp[-2].tkn)));
                                                         }
-#line 1714 "y.tab.c"
+#line 1708 "y.tab.c"
     break;
 
   case 20:
-#line 152 "gocompiler.y"
-                                                        {
-                                                        Node* param = create_node("ParamDecl", NULL);
+#line 143 "gocompiler.y"
+                                                        {Node* param = create_node("ParamDecl", NULL);
                                                         add_son(param, (yyvsp[0].node));
                                                         add_son(param, create_node("Id", (yyvsp[-1].tkn)));                                          
                                                         if ((yyvsp[-3].node) == NULL) (yyval.node) = param;
@@ -1725,72 +1718,75 @@ yyreduce:
                                                                 add_sibling((yyvsp[-3].node), param);
                                                         }
                                                         }
-#line 1729 "y.tab.c"
+#line 1722 "y.tab.c"
     break;
 
   case 21:
-#line 162 "gocompiler.y"
+#line 152 "gocompiler.y"
                                                         {(yyval.node) = NULL;}
-#line 1735 "y.tab.c"
+#line 1728 "y.tab.c"
     break;
 
   case 22:
-#line 165 "gocompiler.y"
+#line 155 "gocompiler.y"
                                                         {(yyval.node) = (yyvsp[-1].node);}
-#line 1741 "y.tab.c"
+#line 1734 "y.tab.c"
     break;
 
   case 23:
-#line 168 "gocompiler.y"
-                                                        {if((yyvsp[-2].node) != NULL){(yyval.node) = (yyvsp[-2].node); add_sibling((yyval.node), (yyvsp[-1].node));} else ((yyval.node) = (yyvsp[-1].node));}
-#line 1747 "y.tab.c"
+#line 158 "gocompiler.y"
+                                                        {if((yyvsp[-2].node)!=NULL){(yyval.node) = (yyvsp[-2].node); add_sibling((yyval.node), (yyvsp[-1].node));} else ((yyval.node) = (yyvsp[-1].node));}
+#line 1740 "y.tab.c"
     break;
 
   case 24:
-#line 169 "gocompiler.y"
-                                                        {if((yyvsp[-2].node) != NULL){(yyval.node) = (yyvsp[-2].node); add_sibling((yyval.node), (yyvsp[-1].node));} else ((yyval.node) = (yyvsp[-1].node));}
-#line 1753 "y.tab.c"
+#line 159 "gocompiler.y"
+                                                        {if((yyvsp[-2].node)!=NULL){(yyval.node) = (yyvsp[-2].node); add_sibling((yyval.node), (yyvsp[-1].node));} else ((yyval.node) = (yyvsp[-1].node));}
+#line 1746 "y.tab.c"
     break;
 
   case 25:
-#line 170 "gocompiler.y"
+#line 160 "gocompiler.y"
                                                         {(yyval.node) = (yyvsp[-1].node);}
-#line 1759 "y.tab.c"
+#line 1752 "y.tab.c"
     break;
 
   case 26:
-#line 171 "gocompiler.y"
+#line 161 "gocompiler.y"
                                                         {(yyval.node) = NULL;}
-#line 1765 "y.tab.c"
+#line 1758 "y.tab.c"
     break;
 
   case 27:
-#line 175 "gocompiler.y"
+#line 166 "gocompiler.y"
                                                         {(yyval.node)=NULL;}
-#line 1771 "y.tab.c"
+#line 1764 "y.tab.c"
     break;
 
   case 28:
-#line 176 "gocompiler.y"
+#line 167 "gocompiler.y"
                                                          {
                                                         (yyval.node) = create_node("Assign", NULL);
                                                         add_son((yyval.node), create_node("Id", (yyvsp[-2].tkn)));
                                                         add_son((yyval.node), (yyvsp[0].node));
                                                         }
-#line 1781 "y.tab.c"
+#line 1774 "y.tab.c"
     break;
 
   case 29:
-#line 181 "gocompiler.y"
-                                                        {
-                                                        (yyval.node) = create_node("Block", NULL);
-                                                        add_son((yyval.node), (yyvsp[-1].node));
+#line 172 "gocompiler.y"
+                                                        {if((yyvsp[-1].node) != NULL && (yyvsp[-1].node) -> sibling != NULL){
+                                                        Node * block  = create_node("Block", NULL);
+                                                        add_son(block, (yyvsp[-1].node));
+                                                        (yyval.node) = block;
+        }                                               else{(yyval.node) = (yyvsp[-1].node);};
+                                                        
                                                         }
-#line 1790 "y.tab.c"
+#line 1786 "y.tab.c"
     break;
 
   case 30:
-#line 186 "gocompiler.y"
+#line 180 "gocompiler.y"
                                                         {
                                                         (yyval.node) = create_node("If", NULL);
                                                         add_son((yyval.node), (yyvsp[-3].node));
@@ -1800,11 +1796,11 @@ yyreduce:
                                                         Node* elseblock = create_node("Block", NULL);
                                                         add_son((yyval.node), elseblock);
                                                         }
-#line 1804 "y.tab.c"
+#line 1800 "y.tab.c"
     break;
 
   case 31:
-#line 195 "gocompiler.y"
+#line 189 "gocompiler.y"
                                                                                         {
                                                                                         (yyval.node) = create_node("If", NULL);
                                                                                         add_son((yyval.node), (yyvsp[-7].node));
@@ -1815,11 +1811,11 @@ yyreduce:
                                                                                         add_son((yyval.node), elseblock);
                                                                                         add_son(elseblock, (yyvsp[-1].node));
                                                                                         }
-#line 1819 "y.tab.c"
+#line 1815 "y.tab.c"
     break;
 
   case 32:
-#line 205 "gocompiler.y"
+#line 199 "gocompiler.y"
                                                         {
                                                         (yyval.node) = create_node("For", NULL);
                                                         add_son((yyval.node), (yyvsp[-3].node));
@@ -1827,279 +1823,278 @@ yyreduce:
                                                         add_son((yyval.node), block);
                                                         add_son(block, (yyvsp[-1].node));
                                                         }
-#line 1831 "y.tab.c"
+#line 1827 "y.tab.c"
     break;
 
   case 33:
-#line 212 "gocompiler.y"
+#line 206 "gocompiler.y"
                                                         {
                                                         (yyval.node)= create_node("For", NULL);
                                                         Node * block = create_node("Block", NULL);
                                                         add_son((yyval.node), block);
                                                         add_son(block, (yyvsp[-1].node));
                                                         }
-#line 1842 "y.tab.c"
+#line 1838 "y.tab.c"
     break;
 
   case 34:
-#line 218 "gocompiler.y"
+#line 212 "gocompiler.y"
                                                         {
                                                         (yyval.node) = create_node("Return", NULL);
                                                         if((yyvsp[0].node) != NULL){add_son((yyval.node), (yyvsp[0].node));}
                                                         }
-#line 1851 "y.tab.c"
+#line 1847 "y.tab.c"
     break;
 
   case 35:
-#line 223 "gocompiler.y"
+#line 217 "gocompiler.y"
                                                         {(yyval.node) = (yyvsp[0].node);}
-#line 1857 "y.tab.c"
+#line 1853 "y.tab.c"
     break;
 
   case 36:
-#line 225 "gocompiler.y"
+#line 219 "gocompiler.y"
                                                         {(yyval.node) = (yyvsp[0].node);}
-#line 1863 "y.tab.c"
+#line 1859 "y.tab.c"
     break;
 
   case 37:
-#line 227 "gocompiler.y"
-                                                        {
-                                                        (yyval.node) =  create_node("Print", NULL);
+#line 221 "gocompiler.y"
+                                                        {(yyval.node) =  create_node("Print", NULL);
                                                         add_son((yyval.node),(yyvsp[-1].node));
                                                         }
-#line 1872 "y.tab.c"
+#line 1867 "y.tab.c"
     break;
 
   case 38:
-#line 234 "gocompiler.y"
-                                                        {(yyval.node) = (yyvsp[0].node);}
-#line 1878 "y.tab.c"
+#line 228 "gocompiler.y"
+                                                        {(yyval.node)=(yyvsp[0].node);}
+#line 1873 "y.tab.c"
     break;
 
   case 39:
-#line 235 "gocompiler.y"
-                                                        {(yyval.node) = NULL;}
-#line 1884 "y.tab.c"
+#line 229 "gocompiler.y"
+                                                        {(yyval.node)=NULL;}
+#line 1879 "y.tab.c"
     break;
 
   case 40:
-#line 238 "gocompiler.y"
-                                                        {(yyval.node) = (yyvsp[0].node);}
-#line 1890 "y.tab.c"
+#line 232 "gocompiler.y"
+                                                        {(yyval.node)=(yyvsp[0].node);}
+#line 1885 "y.tab.c"
     break;
 
   case 41:
-#line 239 "gocompiler.y"
+#line 233 "gocompiler.y"
                                                         {(yyval.node) = create_node("StrLit", (yyvsp[0].tkn));}
-#line 1896 "y.tab.c"
+#line 1891 "y.tab.c"
     break;
 
   case 42:
-#line 242 "gocompiler.y"
+#line 236 "gocompiler.y"
                                                         {
                                                         if((yyvsp[-2].node) == NULL) (yyval.node) = (yyvsp[-1].node);
                                                         else if((yyvsp[-1].node) == NULL) (yyval.node) = (yyvsp[-2].node);
-                                                        else {(yyval.node) = (yyvsp[-1].node); 
-                                                        add_sibling((yyval.node), (yyvsp[-2].node));}
+                                                        else {(yyval.node) = (yyvsp[-2].node); 
+                                                        add_sibling((yyval.node), (yyvsp[-1].node));}
                                                         }
-#line 1907 "y.tab.c"
+#line 1902 "y.tab.c"
     break;
 
   case 43:
-#line 248 "gocompiler.y"
+#line 242 "gocompiler.y"
                                                         {(yyval.node) = NULL;}
-#line 1913 "y.tab.c"
+#line 1908 "y.tab.c"
     break;
 
   case 44:
-#line 251 "gocompiler.y"
+#line 246 "gocompiler.y"
                                                                                 {(yyval.node) = create_node("ParseArgs", NULL);
                                                                                 add_son((yyval.node), create_node("Id", (yyvsp[-10].tkn)));
                                                                                 add_son((yyval.node), (yyvsp[-2].node)); 
                                                                                 }
-#line 1922 "y.tab.c"
+#line 1917 "y.tab.c"
     break;
 
   case 45:
-#line 255 "gocompiler.y"
+#line 250 "gocompiler.y"
                                                                                  {(yyval.node)= NULL;}
-#line 1928 "y.tab.c"
+#line 1923 "y.tab.c"
     break;
 
   case 46:
-#line 258 "gocompiler.y"
+#line 253 "gocompiler.y"
                                                         {(yyval.node) = create_node("Call", NULL);
                                                         add_son((yyval.node), create_node("Id", (yyvsp[-4].tkn)));
                                                         add_son((yyval.node), (yyvsp[-2].node));
                                                         add_son((yyval.node), (yyvsp[-1].node));
                                                         }
-#line 1938 "y.tab.c"
+#line 1933 "y.tab.c"
     break;
 
   case 47:
-#line 263 "gocompiler.y"
+#line 258 "gocompiler.y"
                                                         {(yyval.node) = create_node("Call", NULL);
                                                         add_son((yyval.node), create_node("Id", (yyvsp[-2].tkn)));}
-#line 1945 "y.tab.c"
+#line 1940 "y.tab.c"
     break;
 
   case 48:
-#line 265 "gocompiler.y"
+#line 260 "gocompiler.y"
                                                         {(yyval.node)= NULL;}
-#line 1951 "y.tab.c"
+#line 1946 "y.tab.c"
     break;
 
   case 49:
-#line 268 "gocompiler.y"
+#line 263 "gocompiler.y"
                                                         {                                                                                            //todd
                                                         if((yyvsp[-2].node) == NULL) (yyval.node) = (yyvsp[0].node);
                                                         else if((yyvsp[0].node) == NULL) (yyval.node) = (yyvsp[-2].node);
                                                         else (yyval.node) = add_sibling((yyvsp[-2].node), (yyvsp[0].node));
                                                         }
-#line 1961 "y.tab.c"
+#line 1956 "y.tab.c"
     break;
 
   case 50:
-#line 273 "gocompiler.y"
+#line 268 "gocompiler.y"
                                                         {(yyval.node) = NULL;}
-#line 1967 "y.tab.c"
+#line 1962 "y.tab.c"
     break;
 
   case 51:
-#line 276 "gocompiler.y"
-                                                        {(yyval.node) = create_node("Or", NULL);  add_son((yyval.node), (yyvsp[-2].node)); add_son((yyval.node), (yyvsp[0].node));}
-#line 1973 "y.tab.c"
+#line 271 "gocompiler.y"
+                                                        {(yyval.node) = create_node("Or",NULL);  add_son((yyval.node), (yyvsp[-2].node)); add_son((yyval.node), (yyvsp[0].node));}
+#line 1968 "y.tab.c"
     break;
 
   case 52:
-#line 277 "gocompiler.y"
-                                                        {(yyval.node) = create_node("And", NULL); add_son((yyval.node), (yyvsp[-2].node)); add_son((yyval.node), (yyvsp[0].node));}
-#line 1979 "y.tab.c"
+#line 272 "gocompiler.y"
+                                                        {(yyval.node) = create_node("And",NULL); add_son((yyval.node), (yyvsp[-2].node)); add_son((yyval.node), (yyvsp[0].node));}
+#line 1974 "y.tab.c"
     break;
 
   case 53:
-#line 278 "gocompiler.y"
-                                                        {(yyval.node) = create_node("Lt", NULL);  add_son((yyval.node), (yyvsp[-2].node)); add_son((yyval.node), (yyvsp[0].node));}
-#line 1985 "y.tab.c"
+#line 273 "gocompiler.y"
+                                                        {(yyval.node) = create_node("Lt",NULL);  add_son((yyval.node), (yyvsp[-2].node)); add_son((yyval.node), (yyvsp[0].node));}
+#line 1980 "y.tab.c"
     break;
 
   case 54:
-#line 279 "gocompiler.y"
-                                                        {(yyval.node) = create_node("Gt", NULL);  add_son((yyval.node), (yyvsp[-2].node)); add_son((yyval.node), (yyvsp[0].node));}
-#line 1991 "y.tab.c"
+#line 274 "gocompiler.y"
+                                                        {(yyval.node) = create_node("Gt",NULL);  add_son((yyval.node), (yyvsp[-2].node)); add_son((yyval.node), (yyvsp[0].node));}
+#line 1986 "y.tab.c"
     break;
 
   case 55:
-#line 280 "gocompiler.y"
-                                                        {(yyval.node) = create_node("Eq", NULL);  add_son((yyval.node), (yyvsp[-2].node)); add_son((yyval.node), (yyvsp[0].node));}
-#line 1997 "y.tab.c"
+#line 275 "gocompiler.y"
+                                                        {(yyval.node) = create_node("Eq",NULL);  add_son((yyval.node), (yyvsp[-2].node)); add_son((yyval.node), (yyvsp[0].node));}
+#line 1992 "y.tab.c"
     break;
 
   case 56:
-#line 281 "gocompiler.y"
-                                                        {(yyval.node) = create_node("Ne", NULL);  add_son((yyval.node), (yyvsp[-2].node)); add_son((yyval.node), (yyvsp[0].node));}
-#line 2003 "y.tab.c"
+#line 276 "gocompiler.y"
+                                                        {(yyval.node) = create_node("Ne",NULL);  add_son((yyval.node), (yyvsp[-2].node)); add_son((yyval.node), (yyvsp[0].node));}
+#line 1998 "y.tab.c"
     break;
 
   case 57:
-#line 282 "gocompiler.y"
-                                                        {(yyval.node) = create_node("Le", NULL);  add_son((yyval.node), (yyvsp[-2].node)); add_son((yyval.node), (yyvsp[0].node));}
-#line 2009 "y.tab.c"
+#line 277 "gocompiler.y"
+                                                        {(yyval.node) = create_node("Le",NULL);  add_son((yyval.node), (yyvsp[-2].node)); add_son((yyval.node), (yyvsp[0].node));}
+#line 2004 "y.tab.c"
     break;
 
   case 58:
-#line 283 "gocompiler.y"
-                                                        {(yyval.node) = create_node("Ge", NULL);  add_son((yyval.node), (yyvsp[-2].node)); add_son((yyval.node), (yyvsp[0].node));}
-#line 2015 "y.tab.c"
+#line 278 "gocompiler.y"
+                                                        {(yyval.node) = create_node("Ge",NULL);  add_son((yyval.node), (yyvsp[-2].node)); add_son((yyval.node), (yyvsp[0].node));}
+#line 2010 "y.tab.c"
     break;
 
   case 59:
-#line 284 "gocompiler.y"
-                                                        {(yyval.node) = create_node("Add", NULL); add_son((yyval.node), (yyvsp[-2].node)); add_son((yyval.node), (yyvsp[0].node));}
-#line 2021 "y.tab.c"
+#line 279 "gocompiler.y"
+                                                        {(yyval.node) = create_node("Add",NULL); add_son((yyval.node), (yyvsp[-2].node)); add_son((yyval.node), (yyvsp[0].node));}
+#line 2016 "y.tab.c"
     break;
 
   case 60:
-#line 285 "gocompiler.y"
-                                                        {(yyval.node) = create_node("Sub", NULL); add_son((yyval.node), (yyvsp[-2].node)); add_son((yyval.node), (yyvsp[0].node));}
-#line 2027 "y.tab.c"
+#line 280 "gocompiler.y"
+                                                        {(yyval.node) = create_node("Sub",NULL); add_son((yyval.node), (yyvsp[-2].node)); add_son((yyval.node), (yyvsp[0].node));}
+#line 2022 "y.tab.c"
     break;
 
   case 61:
-#line 286 "gocompiler.y"
-                                                        {(yyval.node) = create_node("Mul", NULL); add_son((yyval.node), (yyvsp[-2].node)); add_son((yyval.node), (yyvsp[0].node));}
-#line 2033 "y.tab.c"
+#line 281 "gocompiler.y"
+                                                        {(yyval.node) = create_node("Mul",NULL); add_son((yyval.node), (yyvsp[-2].node)); add_son((yyval.node), (yyvsp[0].node));}
+#line 2028 "y.tab.c"
     break;
 
   case 62:
-#line 287 "gocompiler.y"
-                                                        {(yyval.node) = create_node("Div", NULL); add_son((yyval.node), (yyvsp[-2].node)); add_son((yyval.node), (yyvsp[0].node));}
-#line 2039 "y.tab.c"
+#line 282 "gocompiler.y"
+                                                        {(yyval.node) = create_node("Div",NULL); add_son((yyval.node), (yyvsp[-2].node)); add_son((yyval.node), (yyvsp[0].node));}
+#line 2034 "y.tab.c"
     break;
 
   case 63:
-#line 288 "gocompiler.y"
-                                                        {(yyval.node) = create_node("Mod", NULL); add_son((yyval.node), (yyvsp[-2].node)); add_son((yyval.node), (yyvsp[0].node));}
-#line 2045 "y.tab.c"
+#line 283 "gocompiler.y"
+                                                        {(yyval.node) = create_node("Mod",NULL); add_son((yyval.node), (yyvsp[-2].node)); add_son((yyval.node), (yyvsp[0].node));}
+#line 2040 "y.tab.c"
     break;
 
   case 64:
-#line 289 "gocompiler.y"
-                                                        {(yyval.node) = create_node("Not", NULL); add_son((yyval.node), (yyvsp[0].node));}
-#line 2051 "y.tab.c"
+#line 284 "gocompiler.y"
+                                                        {(yyval.node) = create_node("Not",NULL); add_son((yyval.node), (yyvsp[0].node));}
+#line 2046 "y.tab.c"
     break;
 
   case 65:
-#line 290 "gocompiler.y"
-                                                        {(yyval.node) = create_node("Minus", NULL); add_son((yyval.node), (yyvsp[0].node));}
-#line 2057 "y.tab.c"
+#line 285 "gocompiler.y"
+                                                        {(yyval.node) = create_node("Minus",NULL); add_son((yyval.node), (yyvsp[0].node));}
+#line 2052 "y.tab.c"
     break;
 
   case 66:
-#line 291 "gocompiler.y"
-                                                        {(yyval.node) = create_node("Plus", NULL);  add_son((yyval.node), (yyvsp[0].node));}
-#line 2063 "y.tab.c"
+#line 286 "gocompiler.y"
+                                                        {(yyval.node) = create_node("Plus",NULL);  add_son((yyval.node), (yyvsp[0].node));}
+#line 2058 "y.tab.c"
     break;
 
   case 67:
-#line 292 "gocompiler.y"
+#line 287 "gocompiler.y"
                                                         {(yyval.node) = create_node("IntLit", (yyvsp[0].tkn));}
-#line 2069 "y.tab.c"
+#line 2064 "y.tab.c"
     break;
 
   case 68:
-#line 293 "gocompiler.y"
+#line 288 "gocompiler.y"
                                                         {(yyval.node) = create_node("RealLit", (yyvsp[0].tkn));}
-#line 2075 "y.tab.c"
+#line 2070 "y.tab.c"
     break;
 
   case 69:
-#line 294 "gocompiler.y"
+#line 289 "gocompiler.y"
                                                         {(yyval.node) = create_node("Id", (yyvsp[0].tkn));}
-#line 2081 "y.tab.c"
+#line 2076 "y.tab.c"
     break;
 
   case 70:
-#line 295 "gocompiler.y"
+#line 290 "gocompiler.y"
                                                         {(yyval.node) = (yyvsp[0].node);}
-#line 2087 "y.tab.c"
+#line 2082 "y.tab.c"
     break;
 
   case 71:
-#line 296 "gocompiler.y"
+#line 291 "gocompiler.y"
                                                         {(yyval.node) = (yyvsp[-1].node);}
-#line 2093 "y.tab.c"
+#line 2088 "y.tab.c"
     break;
 
   case 72:
-#line 297 "gocompiler.y"
-                                                        {(yyval.node) = NULL;}
-#line 2099 "y.tab.c"
+#line 292 "gocompiler.y"
+                                                        {(yyval.node)=NULL;}
+#line 2094 "y.tab.c"
     break;
 
 
-#line 2103 "y.tab.c"
+#line 2098 "y.tab.c"
 
       default: break;
     }
@@ -2331,4 +2326,4 @@ yyreturn:
 #endif
   return yyresult;
 }
-#line 300 "gocompiler.y"
+#line 295 "gocompiler.y"

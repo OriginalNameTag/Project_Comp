@@ -92,7 +92,7 @@ void printTable(symtab *table){
 }
 void printParameters(symbols * symbols){
     if(symbols != NULL){
-        pritnf("(");
+        printf("(");
         //no clue need to create more stuff
         //im going insane haha
 
@@ -101,9 +101,10 @@ void printParameters(symbols * symbols){
 }
 
 //Parsing from AST to Symbol Table
-void tableParse(Node * n, symtab *st){
+/*void tableParse(Node * n, symtab *st){
     
 
 
 
 }
+*/

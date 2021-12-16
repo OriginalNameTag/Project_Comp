@@ -41,8 +41,6 @@ symtab * search_element(symtab *st, char *str){
         }
     }
 }
-
-/*
 void show_table(symtab *st) {
     if(!st) return;
     symtab *aux;
