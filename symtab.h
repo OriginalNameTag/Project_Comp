@@ -12,18 +12,19 @@ typedef struct symbols{
 typedef struct st{
     char *name;                 //Function Name
     int type;                   //Function Identifier, 0 = Global, 1 = Everything else  
+    char *params;               //parameters of the functions
     char *returns;              //What the function returns, cause we use the type_type for this maybe? idk
     struct st *next;            //Points to next in line
     struct symbols *symbol;     //Points to the symbols 
 }symtab;
 
-symtab *insert_element(symtab **symtab, char *str, type_type tt);
+symtab *insert_element(symtab **symtab, char *str, int tt, char* params, char* returns);
 symtab *search_element(symtab *symtab, char *str);
 void show_table(symtab *symtab);
 
 void printTable(symtab * table);
 void printParameters(symbols * symbols);
 
-void tableParse(Node *n, symtab *symtab);
+//void tableParse(Node *n, symtab *symtab);
 
 #endif

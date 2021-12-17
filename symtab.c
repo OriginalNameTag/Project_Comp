@@ -5,13 +5,14 @@
 
 extern symtab *st;
 
-symtab *insert_element(symtab **st, char *str, type_type tt){
+symtab *insert_element(symtab **st, char *str, int tt, char* param, char* returns){
     symtab *new = (symtab *)malloc(sizeof(symtab));
     symtab *aux;
     symtab *previous;
-
     new->name = strdup(str);
     new->type = tt;
+    new->params = param;
+    new->returns = returns;
     new->next= NULL;
 
     if(*st){
@@ -19,6 +20,7 @@ symtab *insert_element(symtab **st, char *str, type_type tt){
             if(strcmp(aux->name, str)==0){
                 free(new->name);
                 free(new);
+                printf("Symbol already defined\n");
                 return NULL;
             }
         }
@@ -39,39 +41,44 @@ symtab * search_element(symtab *st, char *str){
             return NULL;
         }
     }
+
+    return aux;
 }
 
 //welp it receives the global in the frist case and then will keep working until there's no more elements in the table
-void show_table(symtab *symtab) {
-    while(st != NULL){
-        printTable(st);
-        st = st->next;
-    }
+void show_table(symtab *st) {
+    //printf("showtable\n");
+    printTable(st);
+    
+    return;
 }
 
 //the voices dont stop
 void printTable(symtab *table){
+    //printf("amongus\n");
 
     //Print Global Symbol Table, expeted to at least
     if(table->type == 0){
         printf("===== Global Symbol Table =====\n");
-        if(table->symbol != NULL){
-            symbols *aux = table -> symbol;
-            //if there's param
-            if(1){
-                printf("%s\t%s\tparam\n", aux-> name, aux->type);
+        while(table->name!=NULL){
+            //if there's para
+            if(table->returns==NULL && table->params!=NULL){
+                printf("%s\t(%s)\tnone\n", table-> name, table->params);
+            //printf("Printou\n");
+            }else if(table->returns!=NULL && table->params==NULL){
+                printf("%s\t()\t%s\n", table-> name, table->returns);
+            //printf("Printou\n");
+            }else if(table->returns==NULL && table->params==NULL){
+                printf("%s\t()\tnone\n", table->name);
+            //printf("Printou\n");
+            }else{
+                printf("%s\t(%s)\t %s\n", table-> name, table->params, table->returns);
             }
-            //well... if there isn't lol
-            else{
-                printf("%s\t%s", aux->name, aux->type);
-                //print the params here?
-            }
-
-            while(aux->next != NULL){
-                aux = aux->next;
-                if(1){
-                    printf("%s\t%s\tparam\n", aux-> name, aux->type);
-                }
+            if(table->next){
+                table = table->next;
+            }else{
+                printf("yeet\n");
+                return;
             }
         }
     }
@@ -86,10 +93,12 @@ void printTable(symtab *table){
 
         printf(") Symbol Table ====\n");
 
-        printf("return\t\t%s", table->symbol);
+        //printf("return\t\t%s", table->symbol);
         
     }
+    
 }
+
 void printParameters(symbols * symbols){
     if(symbols != NULL){
         printf("(");

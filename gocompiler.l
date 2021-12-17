@@ -6,7 +6,7 @@
     #include "y.tab.h"
     #include "struct.h"
     #include "symtab.h"
-   
+    #include "semantics.h"
 
     int lflag = 0; 
     int tflag = 0;
@@ -137,7 +137,6 @@ int main (int argc, char**argv){
         else if(strcmp(argv[i], "-s") == 0){
             sflag = 1;
         }  
-        
     }
     if(lflag){
         yylex();
@@ -145,10 +144,11 @@ int main (int argc, char**argv){
     else {
         yyparse();
         if(erro == 0 && tflag){
-            print_tree(root,0);
+        print_tree(root,0);
         }
         else if (sflag){
-            tableParse(root, global);
+            semantic_check(root);
+            //printf("semantic pass\n ");
             show_table(global);
         }
     }
