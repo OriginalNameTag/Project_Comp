@@ -150,6 +150,7 @@ int main (int argc, char**argv){
             semantic_check(root);
             //printf("semantic pass\n ");
             show_table(global);
+            print_tree(root, 0);
         }
     }
 
