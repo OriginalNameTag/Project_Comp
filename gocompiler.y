@@ -17,6 +17,7 @@
 
 %union{
         char* tkn;
+        char* value;
         struct Node * node;
 }
 

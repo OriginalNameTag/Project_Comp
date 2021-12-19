@@ -74,7 +74,7 @@ void show_table(symtab *st)
     return;
 }
 
-// the voices dont stop
+
 void printTable(symtab *table)
 {
     // printf("amongus\n");
@@ -86,7 +86,7 @@ void printTable(symtab *table)
         while (table->name != NULL)
         {
             if(table->returns!=NULL && strcmp(table->returns, "is_var")==0){
-                printf("%s\t%s\n", table->name,table->params);
+                printf("%s\t\t%s\n", table->name,table->params);
             }else
             // if there's para
             if (table->returns == NULL && table->params != NULL)
@@ -125,7 +125,7 @@ void printTable(symtab *table)
         printf("===== Function %s(", table->name);
         // idk where to get the parameters this shit is weird as hell, if I go to the next one it won't work cause I'm going to the next function so I need to go to the next symbol of this one I guess
 
-        // I wanna blow my brains out awful decision to stay up all night especially when I couldn't understand shit of this and the others programs dont help me that much even though I kinda know what I need to do
+       
 
         printf(") Symbol Table ====\n");
 
@@ -139,17 +139,10 @@ void printParameters(symbols *symbols)
     {
         printf("(");
         // no clue need to create more stuff
-        // im going insane haha
+        
 
         printf(")");
     }
 }
 
-// Parsing from AST to Symbol Table
-/*void tableParse(Node * n, symtab *st){
 
-
-
-
-}
-*/

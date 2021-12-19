@@ -148,9 +148,10 @@ union YYSTYPE
 #line 18 "gocompiler.y"
 
         char* tkn;
+        char* value;
         struct Node * node;
 
-#line 154 "y.tab.h"
+#line 155 "y.tab.h"
 
 };
 typedef union YYSTYPE YYSTYPE;

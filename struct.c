@@ -16,6 +16,9 @@ Node *create_node(char* token, char* value){
     n -> sibling = NULL;
     n -> token = token;
     n -> value = value;
+    n -> param = NULL;
+    n -> type = NULL;
+    n -> function = 0;
     //printf("Node created: %s\n", n->token);
     return n;
 }
@@ -111,5 +114,70 @@ void print_tree(Node *node, int numb){
         print_tree(node -> sibling, numb);
     }
 };
+
+void print_tree_anotated(Node *node, int numb){
+    
+    if(root == NULL){
+       // printf("Root %s is null\n",root->token);
+        return;
+    }
+    for(int i = 0; i < numb; i++){
+        printf("..");
+    }
+    if(node -> value != NULL){
+        printf("%s(%s)",  node -> token, node -> value);
+        //need to check if type is not undef, meaning empty
+        if(node -> type != NULL){
+            printf(" - %s", node -> type);
+            //need to
+            if(node -> function != 0){
+                params *aux = node -> param;
+                if(aux != NULL){
+                    printf("");
+                    aux = aux -> next;
+                    while(aux != NULL){
+                        printf(",%s", aux -> type);
+                        aux = aux -> next;
+                    }
+                    printf(")");
+                }
+            }
+        }
+        printf("\n");
+    }
+    else{
+        printf("%s", node -> token);
+        //need to check if type is not undef, meaning empty
+        //
+        if(node -> type != NULL){
+            printf(" - %s", node -> type);
+            //
+            if(node -> function != 0){
+                params *aux = node -> param;
+                if(aux != NULL){
+                    printf("");
+                    aux = aux -> next;
+                    while(aux != NULL){
+                        printf(",%s", aux -> type);
+                        aux = aux -> next;
+                    }
+                    printf(")");
+                }
+            }
+        }
+        printf("\n");
+        
+    }
+
+    if(node -> son != NULL){
+        print_tree_anotated(node -> son, numb+1);
+    }
+    
+    if(node -> sibling != NULL){
+        print_tree_anotated(node -> sibling, numb);
+    }
+};
+
+
 
 
